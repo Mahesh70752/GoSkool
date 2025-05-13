@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+@model GoSkool.ViewModels.Admin.AdminHomeModel;
+
+
+<div>
+    <div class="container-fluid padding">
+        <div class="col-12">
+            <div class="row welcome text-center">
+                <h1 class="display-4">Welcome to Admin Panel</h1>
+            </div>
+            <hr />
+            <div class="col-12">
+                <p class="lead">Welcome to GoSkool Admin Panel. Here you can add Standards, Sections. Assgin Teachers to Classes. Check Teachers and Students data and Do More.</p>
+            </div>
+        </div>
+    </div>
+    @*three column format*@
+    <div class="container-fluid padding mb-3">
+        <div class="row text-center padding">
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <a class="btn" asp-route-Selection="@ViewData["ClassSelectionParam"]" asp-action="Index">
+                    <i class="fa-solid fa-sitemap"></i>
+                    Classes
+                </a>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <a class="btn" asp-route-Selection="@ViewData["TeacherSelectionParam"]" asp-action="Index">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    Teachers
+                </a>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <a class="btn" asp-route-Selection="@ViewData["AdminSelectionParam"]" asp-action="Index">
+                    <i class="fa-solid fa-user-tie"></i>
+                    Admins
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="mb-5">
+        @if (Model.selection == "class")
+        {
+            foreach(var cls1 in Model.AllClasses)
+            {
+
+                <div class="row mb-3">
+                    <div class="col">
+                        Class @cls1.Item1.ClassNumber
+                    </div>
+
+                    @foreach(var cls2 in cls1.Item2)
+                    {
+                        <div class="col">
+                            <a asp-action="Index" asp-route-classId=@cls2.Id asp-controller="Class" class="btn btn-success">@cls2.Standard.ClassNumber@cls2.Section.Name</a>
+                        </div>
+                    }
+
+                </div>
+
+            }
+        }else if (Model.selection == "teacher")
+        {
+            foreach (var cls in Model.teachers)
+            {
+                <p class="lead fa-bold">@cls.Name: teaches @cls.Subject</p>
+            }
+        }
+        else if (Model.selection == "admin")
+        {
+            foreach (var cls in Model.admins)
+            {
+                <p class="lead">@cls.FirstName, @cls.LastName</p>
+            }
+        }
+    </div>
+    <div class="align-self-end mt-10">
+
+        <a class="btn btn-dark btn-sm" asp-action="Create" asp-controller="Standard">Add new Standard</a>
+        <a class="btn btn-dark btn-sm" asp-action="Create" asp-controller="Section">Add new Section</a>
+    </div>
+</div>
+

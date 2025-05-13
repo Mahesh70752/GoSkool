@@ -1,0 +1,8 @@
+﻿.teacher-home{
+    height: 100%;
+    width: 100%;
+}
+
+.carousel-inner{
+    max-height: 40rem !important;
+}

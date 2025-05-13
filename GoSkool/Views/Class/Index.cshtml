@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Class";
+}
+@using GoSkool.Views.Class;
+
+@model GoSkool.Views.Class.IndexModel;
+
+
+
+<div>
+    <div class="container-fluid padding">
+        <h1 class="display-3">Welcome to Class: @Model.Class.Standard.ClassNumber@Model.Class.Section.Name</h1>
+        <div>
+            <h2>Students</h2>
+            @foreach(var student in Model.Students)
+            {
+                <p class="lead">@student.FirstName, @student.LastName</p>
+            }
+        </div>
+        <div>
+            <h2>Subjects</h2>
+            @if(Model.Class.Subjects!=null)
+                @foreach(var subject in Model.Class.Subjects)
+                {
+                    <div class="row">
+                        <p class="col" class="lead">@subject.Name</p>
+                        @if (subject.Teacher != null)
+                        {
+                            <p class="col">Teacher <i class="fa-solid fa-circle-user"></i> @subject.Teacher.Name</p>
+                        }
+                        else
+                        {
+                            <div class="form-floating mb-3 col-md-3">
+                                <form asp-action="AssignTeacher" asp-route-classId="@Model.Class.Id" asp-route-subjectId="@subject.Id">
+                                    <select name="TeacherSelection" name="TeacherSelection" asp-items="@Model.teachers" class="form-select" aria-required="true">
+                                        <options><option selected disabled>---Select Teacher---</option></options>
+                                    </select>
+                                    <button class="btn btn-primary mt-4" type="submit" >Assign</button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+            }
+            <a asp-action="AddSubject" asp-route-classId="@Model.Class.Id" asp-route-id="@Model.Class.Standard.Id" class="btn btn-primary">Add new Subject</a>
+            
+        </div>
+    </div>
+</div>
