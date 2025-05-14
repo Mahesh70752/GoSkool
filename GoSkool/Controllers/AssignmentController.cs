@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GoSkool.Data;
 using GoSkool.Models;
+using GoSkool.Views.Assignment;
 
 namespace GoSkool.Controllers
 {
@@ -17,6 +18,23 @@ namespace GoSkool.Controllers
         public AssignmentController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        public IActionResult TeacherAssignment(int asId)
+        {
+            Console.WriteLine(asId);
+            var TeacherAssignmentObj = new TeacherAssignmentModel();
+            TeacherAssignmentObj.Assignment = _context.Assignment.Include(assignment=>assignment.Class).ThenInclude(cls=>cls.Section).Include(a=>a.Class).ThenInclude(cls=>cls.Standard).Include(assignment=>assignment.CompletedStudents).Where(x=>asId==x.Id).SingleOrDefault();
+            TeacherAssignmentObj.Students = new List<Tuple<StudentEntity, string>>();
+            Console.WriteLine(TeacherAssignmentObj.Assignment.Title);
+            var AllStudents = _context.Students.Include(student => student.Class).Where(student => student.Class.Id == TeacherAssignmentObj.Assignment.Class.Id).ToList();
+            foreach (var student in AllStudents) {
+                var Status = "Completed";
+                if (TeacherAssignmentObj.Assignment.CompletedStudents == null || !TeacherAssignmentObj.Assignment.CompletedStudents.Contains(student))
+                    Status = "Incompleted";
+                TeacherAssignmentObj.Students.Add(new Tuple<StudentEntity, string>(student, Status));
+            }
+            return View(TeacherAssignmentObj);
         }
 
         // GET: Assignment
@@ -44,9 +62,16 @@ namespace GoSkool.Controllers
         }
 
         // GET: Assignment/Create
-        public IActionResult Create()
+        public IActionResult Create(int teacherId)
         {
-            return View();
+            var AssignmentCreationObj = new AssignmentCreationModel();
+            var Teacher = _context.Teachers.Include(teacher => teacher.Classes).ThenInclude(Class => Class.Standard).Include(teacher => teacher.Classes).ThenInclude(Class => Class.Section).Where(teacher => teacher.Id == teacherId).SingleOrDefault();
+            AssignmentCreationObj.ClassList = Teacher.Classes.Select(Class=>new SelectListItem
+            {
+                Text = Class.Standard.ClassNumber.ToString() + Class.Section.Name.ToString(),
+                Value = Class.Id.ToString()
+            });
+            return View(AssignmentCreationObj);
         }
 
         // POST: Assignment/Create
@@ -54,15 +79,13 @@ namespace GoSkool.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description")] AssignmentEntity assignmentEntity)
+        public async Task<IActionResult> Create(AssignmentCreationModel assignmentCreationObj)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(assignmentEntity);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(assignmentEntity);
+            assignmentCreationObj.Assignment.Class = _context.Classes.Find(Int32.Parse(assignmentCreationObj.classId));
+            Console.WriteLine("We are inside valid state model");
+            _context.Add(assignmentCreationObj.Assignment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Teacher");
         }
 
         // GET: Assignment/Edit/5

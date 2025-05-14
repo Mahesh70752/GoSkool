@@ -1,36 +1,43 @@
-﻿@model GoSkool.Models.AssignmentEntity
+﻿@model GoSkool.Views.Assignment.AssignmentCreationModel;
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Assignment";
 }
 
-<h1>Create</h1>
 
-<h4>AssignmentEntity</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+
+<div class="bgi text-white">
+    <div class="container">
+        <div class="row">
+            <div class="create-assignment">
+                <div class="bg-dark text-white col-4">
+                    <h2 class="text-center">Create Assignment</h2>
+                    <form asp-action="Create" class="w-75 m-auto">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="@Model.Assignment.Title" class="control-label"></label>
+                            <input asp-for="@Model.Assignment.Title" class="form-control" />
+                            <span asp-validation-for="@Model.Assignment.Title" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="@Model.Assignment.Description" class="control-label"></label>
+                            <input asp-for="@Model.Assignment.Description" class="form-control" />
+                            <span asp-validation-for="@Model.Assignment.Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mt-3 mb-4">
+                            <select asp-for="@Model.classId" id="roles" asp-items="@Model.ClassList" class="form-select" aria-required="true">
+                                <options><option selected disabled>---SELECT CLASS---</option></options>
+                            </select>
+                            <span asp-validation-for="@Model.classId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Create" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

@@ -1,0 +1,20 @@
+﻿.bgi {
+    background-image: url("https://images.pexels.com/photos/7092358/pexels-photo-7092358.jpeg");
+    background-repeat: no-repeat;
+    height: 90vh;
+    background-position: center;
+    background-size: cover;
+}
+
+.create-assignment
+{
+    position: absolute;
+    top: 47%;
+    transform: translateY(-50%);
+}
+
+.bg-dark {
+    background-color: rgba(0,0,0,.7) !important;
+    border-radius: 1.5rem;
+    padding: 1rem;
+}

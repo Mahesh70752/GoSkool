@@ -68,8 +68,30 @@
             <div class="container">
                 <h3>Assignments</h3>
                 <div class="row gy-3">
+                    @{
+                        var x = 0;
+                        foreach (var assignment in Model.assignments)
+                        {
+                            x++;
+                            if (x > 3) break;
+                            <div class="col-lg-4">
+                                <div class="card">
+                                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibiClKGLPDrr04OrF7ctl4qh0F4X5Y4WnsLpO1ZlTDndhmMKsAPAy_vwPzvbxrHeiNIG5auVISzdb-cyYMKSzTlYkqzXHTxnDoe3ZYfcf_v_LPUAtcKHqC1imQGEQtp_m9M3q7-pDHZtM/s1600/HINDI.png" class="card-img-top" />
+                                    <div class="card-body">
+                                        <h5 class="card-title">@assignment.Title</h5>
+                                        <p class="card-text">Description: @assignment.Description</p>
+                                        <p class="card-text">For Class: @assignment.Class.Standard.ClassNumber@assignment.Class.Section.Name</p>
+                                        <a asp-route-asId="@assignment.Id" asp-action="TeacherAssignment" asp-controller="Assignment" class="btn btn-primary">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
-                <a asp-action="Create" asp-controller="Assignment" class="btn btn-outline-dark btn-small mt-4">Create Assignment</a>
+                <div class="row justify-content-center">
+                    <a asp-action="Assignments" class="btn btn-primary w-25 m-5">Check All</a>
+                </div>
+                <a asp-route-teacherId="@Model.teacherId" asp-action="Create" asp-controller="Assignment" class="btn btn-outline-dark btn-small mt-4">Create Assignment</a>
             </div>
         </div>
     </div>

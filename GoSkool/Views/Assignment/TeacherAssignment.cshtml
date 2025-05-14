@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Assignment";
+}
+
+@model GoSkool.Views.Assignment.TeacherAssignmentModel;
+<div class="container">
+    <h1>Assignment: @Model.Assignment.Title</h1>
+    <p>Description: @Model.Assignment.Description</p>
+    <p>For Class: @Model.Assignment.Class.Standard.ClassNumber@Model.Assignment.Class.Section.Name</p>
+    @if (Model.Students != null)
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <td>First Name</td>
+                    <td>Last Name</td>
+                    <td>Address</td>
+                    <td>Completed Status</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var student in Model.Students)
+                {
+                    <tr>
+                        <td>@student.Item1.FirstName</td>
+                        <td>@student.Item1.LastName</td>
+                        <td>@student.Item1.Address</td>
+                        <td>@student.Item2</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

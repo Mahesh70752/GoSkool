@@ -1,0 +1,58 @@
+﻿
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+@model GoSkool.Views.Student.StudentHomePageModel;
+
+<div class="student-home">
+    <div class="container">
+        <h1>Welcome @Model.Student.FirstName, @Model.Student.LastName</h1>
+        <p>Class: @Model.Student.Class.Standard.ClassNumber@Model.Student.Class.Section.Name</p>
+        <p>Address: @Model.Student.Address</p>
+        @if (Model.Assignments != null)
+        {
+            <h2>Assignments</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td>
+                            Assignment Name
+                        </td>
+                        <td>
+                            Assignment Description
+                        </td>
+                        <td>
+                            Completion Status
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var assignment in Model.Assignments)
+                    {
+                        <tr>
+                            <td>
+                                @assignment.Title
+                            </td>
+                            <td>
+                                @assignment.Description
+                            </td>
+                            @if (assignment.CompletedStudents.Contains(Model.Student))
+                            {
+                                <td>Complete</td>
+                            }
+                            else
+                            {
+                                <td>Incomplete 
+                                    <a href="#" class="btn btn-primary">Submit Assignment</a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+

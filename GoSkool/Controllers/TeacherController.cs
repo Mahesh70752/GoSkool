@@ -31,8 +31,30 @@ namespace GoSkool.Controllers
             var TeacherHomeObj = new TeacherHomeModel();
             GoSkoolUser curUser = (GoSkoolUser)_context.Users.Find((await _userManager.GetUserAsync(HttpContext.User)).Id);
             var teacherId = curUser.UserId;
+            TeacherHomeObj.teacherId = teacherId;
             var teacher = _context.Teachers.Include(x => x.Classes).ThenInclude(x => x.Standard).Include(x => x.Classes).ThenInclude(x => x.Section).Where(x => x.Id == teacherId).SingleOrDefault();
             TeacherHomeObj.classes = teacher.Classes;
+            TeacherHomeObj.assignments = new List<AssignmentEntity>();
+            foreach(var Class in teacher.Classes)
+            {
+                TeacherHomeObj.assignments.AddRange(_context.Assignment.Include(assignment => assignment.Class).Where(assignment => assignment.Class.Id == Class.Id).ToList());
+            }
+            return View(TeacherHomeObj);
+        }
+
+        public async Task<IActionResult> Assignments()
+        {
+            var TeacherHomeObj = new TeacherHomeModel();
+            GoSkoolUser curUser = (GoSkoolUser)_context.Users.Find((await _userManager.GetUserAsync(HttpContext.User)).Id);
+            var teacherId = curUser.UserId;
+            TeacherHomeObj.teacherId = teacherId;
+            var teacher = _context.Teachers.Include(x => x.Classes).ThenInclude(x => x.Standard).Include(x => x.Classes).ThenInclude(x => x.Section).Where(x => x.Id == teacherId).SingleOrDefault();
+            TeacherHomeObj.classes = teacher.Classes;
+            TeacherHomeObj.assignments = new List<AssignmentEntity>();
+            foreach (var Class in teacher.Classes)
+            {
+                TeacherHomeObj.assignments.AddRange(_context.Assignment.Include(assignment => assignment.Class).Where(assignment => assignment.Class.Id == Class.Id).ToList());
+            }
             return View(TeacherHomeObj);
         }
 
