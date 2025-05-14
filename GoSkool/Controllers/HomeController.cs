@@ -18,8 +18,11 @@ namespace GoSkool.Controllers
             if (User.IsInRole("Admin"))
             {
                 return RedirectToAction("Index", "Admin");
+            }else if (User.IsInRole("Teacher"))
+            {
+                return RedirectToAction("Index", "Teacher");
             }
-            return View();
+                return View();
         }
 
         public IActionResult Privacy()

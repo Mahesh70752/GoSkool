@@ -1,5 +1,6 @@
 html {
   font-size: 14px;
+  font-family: sans-serif;
 }
 
 @media (min-width: 768px) {
@@ -26,5 +27,11 @@ html,body{
     height: 100%;
     width: 100%;
 }
+
+.container-fluid {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 
 

@@ -3,6 +3,46 @@
     width: 100%;
 }
 
+
 .carousel-inner{
     max-height: 40rem !important;
+}
+
+.carousel-item-next,
+.carousel-item-prev,
+.carousel-item.active{
+    transition: transform 2s ease;
+}
+
+.carousel-indicators li{
+    width: 40px;
+    height: 6px;
+    margin-right: 4px;
+    margin-left: 4px;
+}
+
+.carousel-caption{
+    position: absolute;
+    top: 47%;
+    transform: translateY(-50%);
+}
+
+.bg-dark{
+    background-color: rgba(0,0,0,.7)!important;
+    border-radius: 1.5rem;
+    padding: 1rem;
+}
+
+.bg-white {
+    background-color: rgba(255,255,255,.7) !important;
+    border-radius: 1.5rem;
+    padding: 1rem;
+}
+
+.card{
+    padding: 0!important;
+}
+
+.bg-ofw {
+    background-color: #D2D2D2;
 }

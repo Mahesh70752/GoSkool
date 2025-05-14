@@ -4,6 +4,7 @@ using GoSkool.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoSkool.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250513111511_NtoNRelationForClassTeacher")]
+    partial class NtoNRelationForClassTeacher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,21 +24,6 @@ namespace GoSkool.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AssignmentEntityStudentEntity", b =>
-                {
-                    b.Property<int>("AssignmentsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CompletedStudentsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AssignmentsId", "CompletedStudentsId");
-
-                    b.HasIndex("CompletedStudentsId");
-
-                    b.ToTable("AssignmentEntityStudentEntity");
-                });
 
             modelBuilder.Entity("ClassEntityTeacherEntity", b =>
                 {
@@ -74,32 +62,6 @@ namespace GoSkool.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Admin");
-                });
-
-            modelBuilder.Entity("GoSkool.Models.AssignmentEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClassId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassId");
-
-                    b.ToTable("Assignment");
                 });
 
             modelBuilder.Entity("GoSkool.Models.ClassEntity", b =>
@@ -498,21 +460,6 @@ namespace GoSkool.Migrations
                     b.HasDiscriminator().HasValue("GoSkoolUser");
                 });
 
-            modelBuilder.Entity("AssignmentEntityStudentEntity", b =>
-                {
-                    b.HasOne("GoSkool.Models.AssignmentEntity", null)
-                        .WithMany()
-                        .HasForeignKey("AssignmentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GoSkool.Models.StudentEntity", null)
-                        .WithMany()
-                        .HasForeignKey("CompletedStudentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ClassEntityTeacherEntity", b =>
                 {
                     b.HasOne("GoSkool.Models.ClassEntity", null)
@@ -526,17 +473,6 @@ namespace GoSkool.Migrations
                         .HasForeignKey("TeachersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("GoSkool.Models.AssignmentEntity", b =>
-                {
-                    b.HasOne("GoSkool.Models.ClassEntity", "Class")
-                        .WithMany()
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Class");
                 });
 
             modelBuilder.Entity("GoSkool.Models.ClassEntity", b =>

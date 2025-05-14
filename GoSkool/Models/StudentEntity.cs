@@ -7,5 +7,6 @@
         public string LastName { get; set; }
         public ClassEntity Class { get; set; }
         public string Address { get; set; }
+        public IEnumerable<AssignmentEntity>? Assignments { get; set; }
     }
 }

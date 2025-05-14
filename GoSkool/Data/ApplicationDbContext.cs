@@ -15,5 +15,6 @@ namespace GoSkool.Data
         public DbSet<StandardEntity> Standard { get; set; }
         public DbSet<SubjectEntity> Subject { get; set; }
         public DbSet<StudentEntity> Students { get; set; }
+        public DbSet<AssignmentEntity> Assignment { get; set; }
     }
 }

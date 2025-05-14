@@ -9,5 +9,6 @@ namespace GoSkool.Models
         public SectionEntity Section { get; set; }
         [ValidateNever]
         public ICollection<SubjectEntity> Subjects { get; set; }
+        public ICollection<TeacherEntity> Teachers { get; set; }
     }
 }
