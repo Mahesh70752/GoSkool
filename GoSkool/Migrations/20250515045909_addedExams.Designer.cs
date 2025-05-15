@@ -4,6 +4,7 @@ using GoSkool.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoSkool.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250515045909_addedExams")]
+    partial class addedExams
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -143,22 +146,10 @@ namespace GoSkool.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("StudentEntityId")
-                        .HasColumnType("int");
-
                     b.Property<int>("SubjectId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("isCompleted")
-                        .HasColumnType("bit");
-
-                    b.PrimitiveCollection<string>("studentMarks")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("StudentEntityId");
 
                     b.ToTable("Exam");
                 });
@@ -596,13 +587,6 @@ namespace GoSkool.Migrations
                     b.Navigation("Standard");
                 });
 
-            modelBuilder.Entity("GoSkool.Models.ExamEntity", b =>
-                {
-                    b.HasOne("GoSkool.Models.StudentEntity", null)
-                        .WithMany("Exams")
-                        .HasForeignKey("StudentEntityId");
-                });
-
             modelBuilder.Entity("GoSkool.Models.StudentEntity", b =>
                 {
                     b.HasOne("GoSkool.Models.ClassEntity", "Class")
@@ -696,11 +680,6 @@ namespace GoSkool.Migrations
             modelBuilder.Entity("GoSkool.Models.ClassEntity", b =>
                 {
                     b.Navigation("Subjects");
-                });
-
-            modelBuilder.Entity("GoSkool.Models.StudentEntity", b =>
-                {
-                    b.Navigation("Exams");
                 });
 
             modelBuilder.Entity("GoSkool.Models.TeacherEntity", b =>

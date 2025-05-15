@@ -33,8 +33,22 @@ namespace GoSkool.Controllers
             var teacherId = curUser.UserId;
             TeacherHomeObj.teacherId = teacherId;
             var teacher = _context.Teachers.Include(x => x.Classes).ThenInclude(x => x.Standard).Include(x => x.Classes).ThenInclude(x => x.Section).Where(x => x.Id == teacherId).SingleOrDefault();
+            var subject = _context.Subject.Where(sub => sub.Name.Contains(teacher.Subject)).FirstOrDefault();
+            if (subject != null)
+            {
+                TeacherHomeObj.subjectId = subject.Id;
+            }
             TeacherHomeObj.classes = teacher.Classes;
             TeacherHomeObj.assignments = new List<AssignmentEntity>();
+            TeacherHomeObj.Exams = new List<ExamEntity>();
+            var AllExams = _context.Exam.ToList();
+            foreach ( var exam in AllExams)
+            {
+                var Class = _context.Classes.Find(exam.ClassId);
+                if (Class == null) continue;
+                if(TeacherHomeObj.classes.Contains(Class))
+                    TeacherHomeObj.Exams.Add(exam);
+            }
             foreach(var Class in teacher.Classes)
             {
                 TeacherHomeObj.assignments.AddRange(_context.Assignment.Include(assignment => assignment.Class).Where(assignment => assignment.Class.Id == Class.Id).ToList());
