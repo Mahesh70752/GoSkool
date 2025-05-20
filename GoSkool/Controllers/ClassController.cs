@@ -27,11 +27,7 @@ namespace GoSkool.Controllers
         public IActionResult Index(int classId)
         {
             IndexObj = new IndexModel();
-            IndexObj.teachers = _context.Teachers.Select(x => new SelectListItem()
-            {
-                Text = x.Name,
-                Value = x.Id.ToString()
-            });
+            IndexObj.teachers = _context.Teachers.ToList();
             IndexObj.Class = _context.Classes.Include(s => s.Standard).Include(s => s.Section).Include(s => s.Subjects).ThenInclude(s=>s.Teacher).Where(s => s.Id == classId).SingleOrDefault();
             if (IndexObj.Class == null)
             {

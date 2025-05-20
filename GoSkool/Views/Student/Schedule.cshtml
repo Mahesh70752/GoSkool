@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Schedule";
+}
+
+@model GoSkool.Views.Student.ClassScheduleModel;
+
+<div class="container">
+    <h1>Time Table</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Class</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var i = 0;
+                foreach (var period in Model.schedule.periods)
+                {
+                    i++;
+                    var sub = period.Subject;
+                    <tr>
+                        <td>Period @i</td>
+                        <td>@sub</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

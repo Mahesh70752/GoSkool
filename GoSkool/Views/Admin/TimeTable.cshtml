@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "Timetable Generation";
+}
+
+@model GoSkool.Views.Admin.TimeTableModel;
+
+<div class="container">
+    <form asp-action="TimeTable">
+        <input hidden asp-for="@Model.name" placeholder="Hello"/>
+        <div class="row justify-content-center gap-2 mb-3">
+            <div class="col-3"><span class="fa-bold">Choose Class</span></div>
+            <div class="col-3">
+                <select asp-for="@Model.ClassId" asp-items="@Model.ClassList" class="form-select">
+                    <options><option selected disabled>--Select Class--</option></options>
+                </select>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+            <div class="col-3">
+                <label>Start Time</label>
+                <input asp-for="@Model.StartTime" type="time" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label>End Time</label>
+                <input asp-for="@Model.EndTime" type="time" class="form-control" />
+                @if (Model.EndTimeError != string.Empty)
+                {
+                    <span class="text-danger">@Model.EndTimeError</span>
+                }
+            </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+            <div class="col-3">
+                <label>Number Of periods</label>
+                <input asp-for="@Model.NumberOfPeriods" type="number" class="form-control"/>
+                @if (Model.NumberOfPeriodsError != string.Empty)
+                {
+                    <span class="text-danger">@Model.NumberOfPeriodsError</span>
+                }
+            </div>
+            <div class="col-3">
+                <label>Each period duration (In minutes)</label>
+                <input asp-for="@Model.PeriodDuration" type="number" class="form-control" />
+                @if (Model.PeriodDurationError != string.Empty)
+                {
+                    <span class="text-danger">@Model.PeriodDurationError</span>
+                }
+            </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+            <div class="col-3">
+                <label>Lunch Break duration (In minutes)</label>
+                <input asp-for="@Model.LunchBreakDuration" type="number" class="form-control" />
+            </div>
+            <div class="col-3">
+                <label>After How many periods</label>
+                <input asp-for="@Model.LunchBreakBeforePeriods" type="number" class="form-control" />
+                @if (Model.LunchBreakBeforePeriodsError != string.Empty)
+                {
+                    <span class="text-danger">@Model.LunchBreakBeforePeriodsError</span>
+                }
+            </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+            <div class="row justify-content-center gap-2 mb-2">
+                Morning Break
+                <label class="switch">
+                    <input asp-for="@Model.MorningBreakRequired" id="morning-check" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div id="MorningBreakDetails" class="row justify-content-center">
+                <div class="col-3">
+                    <label>Break duration (In minutes)</label>
+                    <input asp-for="@Model.MorningBreakDuration" type="number" class="form-control" />
+                </div>
+                <div class="col-3">
+                    <label>After How many periods</label>
+                    <input asp-for="@Model.MorningBreakBeforePeriods" type="number" class="form-control" />
+                    @if (Model.MorningBreakBeforePeriodsError != string.Empty)
+                    {
+                        <span class="text-danger">@Model.MorningBreakBeforePeriodsError</span>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+            <div class="row justify-content-center gap-2 mb-2">
+                Evening Break
+                <label class="switch">
+                    <input asp-for="@Model.EveningBreakRequired" id="evening-check" type="checkbox">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <div id="EveningBreakDetails" class="row justify-content-center">
+                <div class="col-3">
+                    <label>Break duration (In minutes)</label>
+                    <input asp-for="@Model.EveningBreakDuration" type="number" class="form-control" />
+                </div>
+                <div class="col-3">
+                    <label>After How many periods</label>
+                    <input asp-for="@Model.EveningBreakBeforePeriods" type="number" class="form-control" />
+                    @if (Model.EveningBreakBeforePeriodsError != string.Empty)
+                    {
+                        <span class="text-danger">@Model.EveningBreakBeforePeriodsError</span>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            @if (Model.TimeError != string.Empty)
+            {
+                <span class="text-danger text-center">@Model.TimeError</span>
+            }
+            <button class="btn btn-primary col-2" type="submit">Create Timetable</button>
+        </div>
+    </form>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+
+<script type="text/javascript">
+    if($("#morning-check").prop("checked")){
+        $('#MorningBreakDetails').show();
+    }else{
+        $('#MorningBreakDetails').hide();
+    }
+    if($("#evening-check").prop("checked")){
+        $('#EveningBreakDetails').show();
+    }else{
+        $('#EveningBreakDetails').hide();
+    }
+
+    $('#evening-check').change(function(){
+        if($("#evening-check").prop("checked")){
+            $('#EveningBreakDetails').show();
+        }else{
+            $('#EveningBreakDetails').hide();
+        }
+    });
+    $('#morning-check').change(function(){
+        if($("#morning-check").prop("checked")){
+            $('#MorningBreakDetails').show();
+        }else{
+            $('#MorningBreakDetails').hide();
+        }
+    });
+</script>

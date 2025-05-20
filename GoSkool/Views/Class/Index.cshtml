@@ -30,9 +30,14 @@
                         }
                         else
                         {
+                            var curSubjectTeachers = Model.teachers.Where(teacher => subject.Name.ToLower().Contains(teacher.Subject.ToLower())).Select(x => new SelectListItem
+                            {
+                                Text = x.Name,
+                                Value = x.Id.ToString()
+                            });                        
                             <div class="form-floating mb-3 col-md-3">
                                 <form asp-action="AssignTeacher" asp-route-classId="@Model.Class.Id" asp-route-subjectId="@subject.Id">
-                                    <select name="TeacherSelection" name="TeacherSelection" asp-items="@Model.teachers" class="form-select" aria-required="true">
+                                    <select name="TeacherSelection" name="TeacherSelection" asp-items="@curSubjectTeachers" class="form-select" aria-required="true">
                                         <options><option selected disabled>---Select Teacher---</option></options>
                                     </select>
                                     <button class="btn btn-primary mt-4" type="submit" >Assign</button>

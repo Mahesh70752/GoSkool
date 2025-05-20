@@ -2,6 +2,7 @@ using GoSkool.Data;
 using GoSkool.BackGroundTasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using GoSkool.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>().AddDefaultTokenProviders()
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddGoSkool();
-
+builder.Services.AddScoped<ITimeTableService, TimeTableService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

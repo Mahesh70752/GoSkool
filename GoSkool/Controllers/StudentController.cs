@@ -10,6 +10,7 @@ using GoSkool.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using GoSkool.Views.Student;
+using GoSkool.Views.Teacher;
 
 namespace GoSkool.Controllers
 {
@@ -41,6 +42,15 @@ namespace GoSkool.Controllers
             StudentHomePageObj.Assignments = _context.Assignment.Include(x => x.Class).Include(x=>x.CompletedStudents).Where(x => x.Class.Id == StudentHomePageObj.Student.Class.Id).ToList();
             return View(StudentHomePageObj);
 
+        }
+        public async Task<IActionResult> Schedule()
+        {
+
+            var studentId = await GetCurrentStudentId();
+            var Student = _context.Students.Include(x => x.Class).Where(x => x.Id == studentId).SingleOrDefault();
+            ClassScheduleModel scheduleObj = new ClassScheduleModel();
+            scheduleObj.schedule = _context.classSchedule.Include(x => x.periods).Include(x => x.Class).Where(x => x.Class.Id == Student.Class.Id).SingleOrDefault();
+            return View(scheduleObj);
         }
 
         // GET: Student/Details/5

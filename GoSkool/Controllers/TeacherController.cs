@@ -56,6 +56,15 @@ namespace GoSkool.Controllers
             return View(TeacherHomeObj);
         }
 
+        public async Task<IActionResult> Schedule()
+        {
+            GoSkoolUser curUser = (GoSkoolUser)_context.Users.Find((await _userManager.GetUserAsync(HttpContext.User)).Id);
+            var teacherId = curUser.UserId;
+            ScheduleModel teacherScheduleObj = new ScheduleModel();
+            teacherScheduleObj.Schedule = _context.TeacherSchedule.Include(x => x.Teacher).Where(x => x.Teacher.Id == teacherId).Include(x=>x.Class).ThenInclude(x=>x.Standard).Include(x=>x.Class).ThenInclude(x=>x.Section).SingleOrDefault();
+            return View(teacherScheduleObj);
+        }
+
         public async Task<IActionResult> Assignments()
         {
             var TeacherHomeObj = new TeacherHomeModel();

@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public ClassEntity Class { get; set; }
-        public List<TeacherEntity> periods { get; set; } = new List<TeacherEntity>(9);
+        public List<TeacherEntity?> periods { get; set; } = new List<TeacherEntity?>(9);
     }
 }

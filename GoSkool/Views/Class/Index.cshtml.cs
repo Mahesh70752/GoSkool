@@ -10,7 +10,8 @@ namespace GoSkool.Views.Class
         public string SubjectName { get; set; }
         public IEnumerable<SubjectEntity> Subjects { get; set; }
 
-        public IEnumerable<SelectListItem> teachers { get; set; }
+        public IEnumerable<SelectListItem> teacherList { get; set; }
+        public List<TeacherEntity> teachers { get; set; }
 
         public string SelectedTeacher { get; set; }
 

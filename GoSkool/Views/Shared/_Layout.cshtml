@@ -28,11 +28,23 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="AppRoles" asp-action="Index">Roles</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="TimeTable">Generate Timetable</a>
+                            </li>
                         }else if (User.IsInRole("Teacher"))
                         {
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Teacher" asp-action="Schedule">Schedule</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Teacher" asp-action="Assignments">Assignments</a>
                             </li>
+                        }else if (User.IsInRole("Student"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Schedule">Schedule</a>
+                            </li>
+                            
                         }
 
                         <li class="nav-item">
@@ -49,7 +61,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer hidden class="border-top footer text-muted mt-4">
         <div class="container">
             &copy; 2025 - GoSkool - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

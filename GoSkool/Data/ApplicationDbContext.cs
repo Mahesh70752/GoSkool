@@ -16,7 +16,8 @@ namespace GoSkool.Data
         public DbSet<SubjectEntity> Subject { get; set; }
         public DbSet<StudentEntity> Students { get; set; }
         public DbSet<AssignmentEntity> Assignment { get; set; }
-        public DbSet<GoSkool.Models.ExamEntity> Exam { get; set; } = default!;
+        public DbSet<ExamEntity> Exam { get; set; } = default!;
         public DbSet<ClassScheduleEntity> classSchedule { get; set; }
+        public DbSet<TeacherScheduleEntity> TeacherSchedule { get; set; }
     }
 }

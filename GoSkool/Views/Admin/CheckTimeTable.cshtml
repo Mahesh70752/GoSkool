@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "Timetable";
+}
+
+@model GoSkool.Views.Admin.TimeTableViewModel;
+<div class="container">
+    <h1>Time Table for Class:@Model.Class.Standard.ClassNumber@Model.Class.Section.Name</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Subject</th>
+                <th>Start Time</th>
+                <th>Duration</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                DateTime time = Model.timeTableModelObj.StartTime;
+                for(int i = 0; i < Model.Teachers.Count; i++)
+                {
+                    if(Model.timeTableModelObj.MorningBreakRequired && i == Model.timeTableModelObj.MorningBreakBeforePeriods)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>Morning Break</td>
+                            <td>@time.ToString("HH:mm")</td>
+                            <td>@Model.timeTableModelObj.MorningBreakDuration minutes</td>
+                        </tr>
+                        time = time.AddMinutes((double)Model.timeTableModelObj.MorningBreakDuration);
+                    }
+                    if(Model.timeTableModelObj.EveningBreakRequired && i == Model.timeTableModelObj.EveningBreakBeforePeriods)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>Evening Break</td>
+                            <td>@time.ToString("HH:mm")</td>
+                            <td>@Model.timeTableModelObj.EveningBreakDuration minutes</td>
+                        </tr>
+                        time = time.AddMinutes((double)Model.timeTableModelObj.EveningBreakDuration);
+                    }
+                    if (i == Model.timeTableModelObj.LunchBreakBeforePeriods)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>Lunch Break</td>
+                            <td>@time.ToString("HH:mm")</td>
+                            <td>@Model.timeTableModelObj.LunchBreakDuration minutes</td>
+                        </tr>
+                        time = time.AddMinutes((double)Model.timeTableModelObj.LunchBreakDuration);
+                    }
+                    <tr>
+                        <td>Period @(i+1)</td>
+                        <td>@Model.Teachers[i].Subject</td>
+                        <td>@time.ToString("HH:mm")</td>
+                        <td>@Model.timeTableModelObj.PeriodDuration minutes</td>
+                    </tr>
+                    time = time.AddMinutes((double)Model.timeTableModelObj.PeriodDuration);
+                }
+            }
+        </tbody>
+    </table>
+</div>

@@ -9,6 +9,9 @@ using GoSkool.Data;
 using GoSkool.Models;
 using GoSkool.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
+using GoSkool.Views.Admin;
+using System.Data;
+using GoSkool.Services;
 
 namespace GoSkool.Controllers
 {
@@ -16,16 +19,17 @@ namespace GoSkool.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ITimeTableService _timeTableService;
 
-        public AdminController(ApplicationDbContext context)
+        public AdminController(ApplicationDbContext context,ITimeTableService timeTableService)
         {
             _context = context;
+            _timeTableService = timeTableService;
         }
 
         public async Task<IActionResult> Index(string Selection)
         {
             AdminHomeModel adminHomeModel = new AdminHomeModel(_context);
-            
             if (!string.IsNullOrWhiteSpace(Selection))
             {
                 switch (Selection)
@@ -64,6 +68,32 @@ namespace GoSkool.Controllers
 
                 return View(adminHomeModel);
         }
+
+        public IActionResult TimeTable(TimeTableModel timeTableModelObj)
+        {
+            if (_timeTableService.CheckTimeTableData(timeTableModelObj))
+            {
+                var timetable = _timeTableService.CreateTimeTable(timeTableModelObj);
+                if (timetable == null)
+                {
+                    return View(timeTableModelObj);
+                }
+                return View("CheckTimeTable", timetable);
+            }
+            
+                return View(timeTableModelObj);
+        }
+
+        
+        [HttpPost]
+
+        public IActionResult CheckTimeTable()
+        {
+            
+            return View();
+        }
+
+         
 
        
     }
