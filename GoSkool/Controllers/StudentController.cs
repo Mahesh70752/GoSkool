@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using GoSkool.Views.Student;
 using GoSkool.Views.Teacher;
+using GoSkool.Services;
 
 namespace GoSkool.Controllers
 {
@@ -19,167 +20,32 @@ namespace GoSkool.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IStudentService _studentService;
 
-        public StudentController(ApplicationDbContext context,UserManager<IdentityUser> userManager)
+        public StudentController(ApplicationDbContext context,UserManager<IdentityUser> userManager,IStudentService studentService)
         {
             _context = context;
             _userManager = userManager;
-        }
-
-        public async Task<int> GetCurrentStudentId()
-        {
-            GoSkoolUser curUser = (GoSkoolUser)_context.Users.Find((await _userManager.GetUserAsync(HttpContext.User)).Id);
-            var studentId = curUser.UserId;
-            return studentId;
+            _studentService = studentService;
         }
 
         // GET: Student
         public async Task<IActionResult> Index()
         {
-            var studentId = await GetCurrentStudentId();
+            var user = await _userManager.GetUserAsync(HttpContext.User);
             var StudentHomePageObj = new StudentHomePageModel();
-            StudentHomePageObj.Student = _context.Students.Include(student => student.Class).ThenInclude(cls=>cls.Section).Include(st=>st.Class).ThenInclude(cls=>cls.Standard).Where(student => student.Id == studentId).SingleOrDefault();
-            StudentHomePageObj.Assignments = _context.Assignment.Include(x => x.Class).Include(x=>x.CompletedStudents).Where(x => x.Class.Id == StudentHomePageObj.Student.Class.Id).ToList();
+            _studentService.GetStudentHomePageObj(user, StudentHomePageObj);
             return View(StudentHomePageObj);
 
         }
         public async Task<IActionResult> Schedule()
         {
-
-            var studentId = await GetCurrentStudentId();
-            var Student = _context.Students.Include(x => x.Class).Where(x => x.Id == studentId).SingleOrDefault();
+            var user = await _userManager.GetUserAsync(HttpContext.User);
             ClassScheduleModel scheduleObj = new ClassScheduleModel();
-            scheduleObj.schedule = _context.classSchedule.Include(x => x.periods).Include(x => x.Class).Where(x => x.Class.Id == Student.Class.Id).SingleOrDefault();
+            _studentService.GetClassScheduleObj(user, scheduleObj);
             return View(scheduleObj);
         }
 
-        // GET: Student/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var studentEntity = await _context.Students
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (studentEntity == null)
-            {
-                return NotFound();
-            }
-
-            return View(studentEntity);
-        }
-
-        // GET: Student/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Student/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FirstName,LastName,Address")] StudentEntity studentEntity)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(studentEntity);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(studentEntity);
-        }
-
-        // GET: Student/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var studentEntity = await _context.Students.FindAsync(id);
-            if (studentEntity == null)
-            {
-                return NotFound();
-            }
-            return View(studentEntity);
-        }
-
-        // POST: Student/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FirstName,LastName,Address")] StudentEntity studentEntity)
-        {
-            if (id != studentEntity.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(studentEntity);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StudentEntityExists(studentEntity.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(studentEntity);
-        }
-
-        // GET: Student/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var studentEntity = await _context.Students
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (studentEntity == null)
-            {
-                return NotFound();
-            }
-
-            return View(studentEntity);
-        }
-
-        // POST: Student/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var studentEntity = await _context.Students.FindAsync(id);
-            if (studentEntity != null)
-            {
-                _context.Students.Remove(studentEntity);
-            }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool StudentEntityExists(int id)
-        {
-            return _context.Students.Any(e => e.Id == id);
-        }
+        
     }
 }

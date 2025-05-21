@@ -36,9 +36,9 @@ namespace GoSkool.Services
                 timeTableModelObj.NumberOfPeriodsError = "Periods should be between 3 and 9";
                 return false;
             }
-            if (timeTableModelObj.PeriodDuration < 30 || timeTableModelObj.PeriodDuration > 60)
+            if (timeTableModelObj.PeriodDuration < 30 || timeTableModelObj.PeriodDuration > 90)
             {
-                timeTableModelObj.PeriodDurationError = "period duration must be between 30 mins to 60mins";
+                timeTableModelObj.PeriodDurationError = "period duration must be between 30 mins to 90mins";
                 return false;
             }
             if (timeTableModelObj.LunchBreakBeforePeriods <= 0 || timeTableModelObj.LunchBreakBeforePeriods >= timeTableModelObj.NumberOfPeriods)

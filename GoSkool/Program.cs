@@ -18,6 +18,11 @@ builder.Services.AddDefaultIdentity<IdentityUser>().AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddGoSkool();
 builder.Services.AddScoped<ITimeTableService, TimeTableService>();
+builder.Services.AddScoped<IAssignmentService, AssignmentService>();
+builder.Services.AddScoped<IClassService, ClassService>();
+builder.Services.AddScoped<IExamService, ExamService>();
+builder.Services.AddScoped<ITeacherService, TeacherService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
