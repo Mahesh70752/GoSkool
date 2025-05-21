@@ -1,6 +1,6 @@
 ﻿using GoSkool.Data;
+using GoSkool.DTO;
 using GoSkool.Models;
-using GoSkool.Views.Admin;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 

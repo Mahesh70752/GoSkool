@@ -1,7 +1,7 @@
 ﻿using GoSkool.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace GoSkool.Views.Class
+namespace GoSkool.DTO
 {
     public class IndexModel
     {

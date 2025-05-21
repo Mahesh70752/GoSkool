@@ -2,7 +2,7 @@
     ViewData["Title"] = "Timetable Generation";
 }
 
-@model GoSkool.Views.Admin.TimeTableModel;
+@model GoSkool.DTO.TimeTableModel;
 
 <div class="container">
     <form asp-action="TimeTable">
@@ -18,11 +18,11 @@
         <div class="row justify-content-center mb-3">
             <div class="col-3">
                 <label>Start Time</label>
-                <input asp-for="@Model.StartTime" type="time" class="form-control" />
+                <input id="startTime" asp-for="@Model.StartTime" type="time" class="form-control" />
             </div>
             <div class="col-3">
                 <label>End Time</label>
-                <input asp-for="@Model.EndTime" type="time" class="form-control" />
+                <input id="endTime" asp-for="@Model.EndTime" type="time" class="form-control" />
                 @if (Model.EndTimeError != string.Empty)
                 {
                     <span class="text-danger">@Model.EndTimeError</span>
@@ -32,7 +32,7 @@
         <div class="row justify-content-center mb-3">
             <div class="col-3">
                 <label>Number Of periods</label>
-                <input asp-for="@Model.NumberOfPeriods" type="number" class="form-control"/>
+                <input id="periodsCount" asp-for="@Model.NumberOfPeriods" type="number" class="form-control"/>
                 @if (Model.NumberOfPeriodsError != string.Empty)
                 {
                     <span class="text-danger">@Model.NumberOfPeriodsError</span>
@@ -40,7 +40,7 @@
             </div>
             <div class="col-3">
                 <label>Each period duration (In minutes)</label>
-                <input asp-for="@Model.PeriodDuration" type="number" class="form-control" />
+                <input id="periodDuration" asp-for="@Model.PeriodDuration" type="number" class="form-control" />
                 @if (Model.PeriodDurationError != string.Empty)
                 {
                     <span class="text-danger">@Model.PeriodDurationError</span>
@@ -50,11 +50,11 @@
         <div class="row justify-content-center mb-3">
             <div class="col-3">
                 <label>Lunch Break duration (In minutes)</label>
-                <input asp-for="@Model.LunchBreakDuration" type="number" class="form-control" />
+                <input id="lunchBreakDuration" asp-for="@Model.LunchBreakDuration" type="number" class="form-control" />
             </div>
             <div class="col-3">
                 <label>After How many periods</label>
-                <input asp-for="@Model.LunchBreakBeforePeriods" type="number" class="form-control" />
+                <input id="lunchBreakBeforePeriods" asp-for="@Model.LunchBreakBeforePeriods" type="number" class="form-control" />
                 @if (Model.LunchBreakBeforePeriodsError != string.Empty)
                 {
                     <span class="text-danger">@Model.LunchBreakBeforePeriodsError</span>
@@ -65,18 +65,18 @@
             <div class="row justify-content-center gap-2 mb-2">
                 Morning Break
                 <label class="switch">
-                    <input asp-for="@Model.MorningBreakRequired" id="morning-check" type="checkbox">
+                    <input id="morningBreakRequired" asp-for="@Model.MorningBreakRequired" id="morning-check" type="checkbox">
                     <span class="slider round"></span>
                 </label>
             </div>
             <div id="MorningBreakDetails" class="row justify-content-center">
                 <div class="col-3">
                     <label>Break duration (In minutes)</label>
-                    <input asp-for="@Model.MorningBreakDuration" type="number" class="form-control" />
+                    <input id="morningBreakDuration" asp-for="@Model.MorningBreakDuration" type="number" class="form-control" />
                 </div>
                 <div class="col-3">
                     <label>After How many periods</label>
-                    <input asp-for="@Model.MorningBreakBeforePeriods" type="number" class="form-control" />
+                    <input id="morningBreakBeforePeriods" asp-for="@Model.MorningBreakBeforePeriods" type="number" class="form-control" />
                     @if (Model.MorningBreakBeforePeriodsError != string.Empty)
                     {
                         <span class="text-danger">@Model.MorningBreakBeforePeriodsError</span>
@@ -88,18 +88,18 @@
             <div class="row justify-content-center gap-2 mb-2">
                 Evening Break
                 <label class="switch">
-                    <input asp-for="@Model.EveningBreakRequired" id="evening-check" type="checkbox">
+                    <input id="eveningBreakRequired"  asp-for="@Model.EveningBreakRequired" id="evening-check" type="checkbox">
                     <span class="slider round"></span>
                 </label>
             </div>
             <div id="EveningBreakDetails" class="row justify-content-center">
                 <div class="col-3">
                     <label>Break duration (In minutes)</label>
-                    <input asp-for="@Model.EveningBreakDuration" type="number" class="form-control" />
+                    <input id="eveningBreakDuration" asp-for="@Model.EveningBreakDuration" type="number" class="form-control" />
                 </div>
                 <div class="col-3">
                     <label>After How many periods</label>
-                    <input asp-for="@Model.EveningBreakBeforePeriods" type="number" class="form-control" />
+                    <input id="eveningBreakBeforePeriods" asp-for="@Model.EveningBreakBeforePeriods" type="number" class="form-control" />
                     @if (Model.EveningBreakBeforePeriodsError != string.Empty)
                     {
                         <span class="text-danger">@Model.EveningBreakBeforePeriodsError</span>
@@ -122,26 +122,165 @@
 
 
 <script type="text/javascript">
-    if($("#morning-check").prop("checked")){
+    $("#endTime").change(function(){
+        var et = new Date("1970-1-1 "+$("#endTime").val());
+        var st = new Date("1970-1-1 "+$("#startTime").val());
+        if(et>st){
+            $("#periodsCount").val(9);
+            var time = et.getTime() - st.getTime();
+            time = time/1000/60;
+            var lunchtime = 30;
+            var BreakTime = lunchtime;
+            if($("#morningBreakRequired").prop("checked")){
+                BreakTime += 10;
+                $("#morningBreakDuration").val(10);
+                $("#morningBreakBeforePeriods").val(Math.floor($("#lunchBreakBeforePeriods").val()/2));
+            }
+            if($("#eveningBreakRequired").prop("checked")){
+                BreakTime += 10;
+                $("#eveningBreakDuration").val(10);
+                $("#eveningBreakBeforePeriods").val(Math.floor((Number($("#periodsCount").val())+Number($("#lunchBreakBeforePeriods").val()))/2));
+            }
+            if((time-BreakTime)%9!=0){
+                lunchtime+=(time-BreakTime)%9;
+                time = Math.floor((time-BreakTime)/9);
+            }else{
+                time = (time-BreakTime)/9;
+            }
+            $("#periodDuration").val(time);
+            $("#lunchBreakDuration").val(lunchtime);
+            $("#lunchBreakBeforePeriods").val(Math.floor($("#periodsCount").val()/2));
+        }else{
+            $("#periodsCount").val(0);
+            $("#periodDuration").val(0);
+            $("#lunchBreakDuration").val(0);
+            $("#lunchBreakBeforePeriods").val(0);
+        }
+        
+    });
+    $("#startTime").change(function(){
+        var et = new Date("1970-1-1 "+$("#endTime").val());
+        var st = new Date("1970-1-1 "+$("#startTime").val());
+        if(et>st){
+            $("#periodsCount").val(9);
+            var time = et.getTime() - st.getTime();
+            time = time/1000/60;
+            var lunchtime = 30;
+            var BreakTime = lunchtime;
+            if($("#morningBreakRequired").prop("checked")){
+                BreakTime += 10;
+                $("#morningBreakDuration").val(10);
+                $("#morningBreakBeforePeriods").val(Math.floor($("#lunchBreakBeforePeriods").val()/2));
+            }
+            if($("#eveningBreakRequired").prop("checked")){
+                BreakTime += 10;
+                $("#eveningBreakDuration").val(10);
+                $("#eveningBreakBeforePeriods").val(Math.floor((Number($("#periodsCount").val())+Number($("#lunchBreakBeforePeriods").val()))/2));
+            }
+            if((time-BreakTime)%9!=0){
+                lunchtime+=(time-BreakTime)%9;
+                time = Math.floor((time-BreakTime)/9);
+            }else{
+                time = (time-BreakTime)/9;
+            }
+            $("#periodDuration").val(time);
+            $("#lunchBreakDuration").val(lunchtime);
+            $("#lunchBreakBeforePeriods").val(Math.floor($("#periodsCount").val()/2));
+        }else{
+            $("#periodsCount").val(0);
+            $("#periodDuration").val(0);
+            $("#lunchBreakDuration").val(0);
+            $("#lunchBreakBeforePeriods").val(0);
+        }
+
+    });
+    if($("#morningBreakRequired").prop("checked")){
         $('#MorningBreakDetails').show();
     }else{
         $('#MorningBreakDetails').hide();
     }
-    if($("#evening-check").prop("checked")){
+    if($("#eveningBreakRequired").prop("checked")){
         $('#EveningBreakDetails').show();
     }else{
         $('#EveningBreakDetails').hide();
     }
 
-    $('#evening-check').change(function(){
-        if($("#evening-check").prop("checked")){
+    $('#eveningBreakRequired').change(function(){
+        var et = new Date("1970-1-1 "+$("#endTime").val());
+        var st = new Date("1970-1-1 "+$("#startTime").val());
+        if(et>st){
+            $("#periodsCount").val(9);
+            var time = et.getTime() - st.getTime();
+            time = time/1000/60;
+            var lunchtime = 30;
+            var BreakTime = lunchtime;
+            if($("#morningBreakRequired").prop("checked")){
+                BreakTime += 10;
+                $("#morningBreakDuration").val(10);
+                $("#morningBreakBeforePeriods").val(Math.floor($("#lunchBreakBeforePeriods").val()/2));
+            }
+            if($("#eveningBreakRequired").prop("checked")){
+                BreakTime += 10;
+                $("#eveningBreakDuration").val(10);
+                $("#eveningBreakBeforePeriods").val(Math.floor((Number($("#periodsCount").val())+Number($("#lunchBreakBeforePeriods").val()))/2));
+            }
+            if((time-BreakTime)%9!=0){
+                lunchtime+=(time-BreakTime)%9;
+                time = Math.floor((time-BreakTime)/9);
+            }else{
+                time = (time-BreakTime)/9;
+            }
+            $("#periodDuration").val(time);
+            $("#lunchBreakDuration").val(lunchtime);
+            $("#lunchBreakBeforePeriods").val(Math.floor($("#periodsCount").val()/2));
+        }else{
+            $("#periodsCount").val(0);
+            $("#periodDuration").val(0);
+            $("#lunchBreakDuration").val(0);
+            $("#lunchBreakBeforePeriods").val(0);
+        }
+        if($("#eveningBreakRequired").prop("checked")){
+            
             $('#EveningBreakDetails').show();
         }else{
             $('#EveningBreakDetails').hide();
         }
     });
-    $('#morning-check').change(function(){
-        if($("#morning-check").prop("checked")){
+    $('#morningBreakRequired').change(function(){
+        var et = new Date("1970-1-1 "+$("#endTime").val());
+        var st = new Date("1970-1-1 "+$("#startTime").val());
+        if(et>st){
+            $("#periodsCount").val(9);
+            var time = et.getTime() - st.getTime();
+            time = time/1000/60;
+            var lunchtime = 30;
+            var BreakTime = lunchtime;
+            if($("#morningBreakRequired").prop("checked")){
+                BreakTime += 10;
+                $("#morningBreakDuration").val(10);
+                $("#morningBreakBeforePeriods").val(Math.floor($("#lunchBreakBeforePeriods").val()/2));
+            }
+            if($("#eveningBreakRequired").prop("checked")){
+                BreakTime += 10;
+                $("#eveningBreakDuration").val(10);
+                $("#eveningBreakBeforePeriods").val(Math.floor((Number($("#periodsCount").val())+Number($("#lunchBreakBeforePeriods").val()))/2));
+            }
+            if((time-BreakTime)%9!=0){
+                lunchtime+=(time-BreakTime)%9;
+                time = Math.floor((time-BreakTime)/9);
+            }else{
+                time = (time-BreakTime)/9;
+            }
+            $("#periodDuration").val(time);
+            $("#lunchBreakDuration").val(lunchtime);
+            $("#lunchBreakBeforePeriods").val(Math.floor($("#periodsCount").val()/2));
+        }else{
+            $("#periodsCount").val(0);
+            $("#periodDuration").val(0);
+            $("#lunchBreakDuration").val(0);
+            $("#lunchBreakBeforePeriods").val(0);
+        }
+        if($("#morningBreakRequired").prop("checked")){
             $('#MorningBreakDetails').show();
         }else{
             $('#MorningBreakDetails').hide();

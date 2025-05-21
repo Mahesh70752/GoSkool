@@ -53,6 +53,11 @@ namespace GoSkool.Controllers
             return View(TeacherHomeObj);
         }
 
+        public IActionResult CheckExam()
+        {
+            return View();
+        }
+
         
 
     }

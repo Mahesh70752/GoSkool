@@ -1,8 +1,9 @@
-﻿@{
+﻿@using GoSkool.DTO
+@{
     ViewData["Title"] = "Timetable";
 }
 
-@model GoSkool.Views.Admin.TimeTableViewModel;
+@model TimeTableViewModel;
 <div class="container">
     <h1>Time Table for Class:@Model.Class.Standard.ClassNumber@Model.Class.Section.Name</h1>
     <table class="table table-striped">

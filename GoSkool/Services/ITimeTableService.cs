@@ -1,4 +1,4 @@
-﻿using GoSkool.Views.Admin;
+﻿using GoSkool.DTO;
 
 namespace GoSkool.Services
 {

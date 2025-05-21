@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace GoSkool.Views.Admin
+namespace GoSkool.DTO
 {
     public class TimeTableModel
     {

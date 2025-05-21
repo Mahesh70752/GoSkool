@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using GoSkool.Data;
 using GoSkool.Models;
 using GoSkool.Views.Class;
+using GoSkool.DTO;
 using NuGet.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using GoSkool.Services;

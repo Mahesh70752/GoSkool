@@ -1,6 +1,6 @@
 ﻿using GoSkool.Models;
 
-namespace GoSkool.Views.Admin
+namespace GoSkool.DTO
 {
     public class TimeTableViewModel
     {

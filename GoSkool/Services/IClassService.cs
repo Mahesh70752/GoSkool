@@ -1,5 +1,5 @@
 ﻿using GoSkool.Views.Class;
-
+using GoSkool.DTO;
 namespace GoSkool.Services
 {
     public interface IClassService

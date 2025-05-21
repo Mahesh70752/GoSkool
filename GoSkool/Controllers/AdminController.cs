@@ -9,9 +9,9 @@ using GoSkool.Data;
 using GoSkool.Models;
 using GoSkool.ViewModels.Admin;
 using Microsoft.AspNetCore.Authorization;
-using GoSkool.Views.Admin;
 using System.Data;
 using GoSkool.Services;
+using GoSkool.DTO;
 
 namespace GoSkool.Controllers
 {

@@ -2,6 +2,7 @@
 
 using GoSkool.Data;
 using GoSkool.Models;
+using GoSkool.DTO;
 using GoSkool.Views.Class;
 using Microsoft.EntityFrameworkCore;
 
