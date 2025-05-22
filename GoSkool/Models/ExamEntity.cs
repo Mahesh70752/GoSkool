@@ -8,7 +8,7 @@
         public DateTime ExamDate { get; set; }
         public int ClassId{  get; set; }
         public List<int> studentMarks { get; set; }
-        public List<int> Students { get; set; }
+        public List<int> students { get; set; }
         public bool isCompleted {  get; set; } =false;
     }
 }

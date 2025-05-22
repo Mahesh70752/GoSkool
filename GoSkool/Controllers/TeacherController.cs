@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using GoSkool.Views.Teacher;
 using Microsoft.AspNetCore.Identity;
 using GoSkool.Services;
+using GoSkool.DTO;
 
 namespace GoSkool.Controllers
 {
@@ -53,9 +54,17 @@ namespace GoSkool.Controllers
             return View(TeacherHomeObj);
         }
 
-        public IActionResult CheckExam()
+        public IActionResult CheckExam(int ExamId)
         {
-            return View();
+            CheckExamDTO checkExamdto = new CheckExamDTO();
+            _teacherService.FillExamDetails(ExamId,checkExamdto);
+            return View(checkExamdto);
+        }
+
+        public IActionResult AddScore(CheckExamDTO checkExamdto)
+        {
+            _teacherService.AddStudentScore(checkExamdto);
+            return RedirectToAction("CheckExam", new { ExamId = checkExamdto.ExamId });
         }
 
         

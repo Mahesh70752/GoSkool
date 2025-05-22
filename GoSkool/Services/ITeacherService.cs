@@ -1,4 +1,5 @@
-﻿using GoSkool.Views.Teacher;
+﻿using GoSkool.DTO;
+using GoSkool.Views.Teacher;
 using Microsoft.AspNetCore.Identity;
 
 namespace GoSkool.Services
@@ -9,5 +10,7 @@ namespace GoSkool.Services
         int GetCurrentTeacherId(IdentityUser user);
         void GetScheduleData(int teacherId,ScheduleModel teacherScheduleObj );
         void GetTeacherAssignments(int teacherId,TeacherHomeModel TeacherHomeObj);
+        void FillExamDetails(int ExamId, CheckExamDTO checkExamdto);
+        void AddStudentScore(CheckExamDTO checkExamdto);
     }
 }

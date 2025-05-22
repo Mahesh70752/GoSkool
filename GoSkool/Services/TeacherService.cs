@@ -1,7 +1,9 @@
 ﻿using GoSkool.Data;
+using GoSkool.DTO;
 using GoSkool.Models;
 using GoSkool.Views.Teacher;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace GoSkool.Services
@@ -66,6 +68,53 @@ namespace GoSkool.Services
             {
                 TeacherHomeObj.assignments.AddRange(_context.Assignment.Include(assignment => assignment.Class).Where(assignment => assignment.Class.Id == Class.Id).ToList());
             }
+        }
+
+        public void FillExamDetails(int ExamId, CheckExamDTO checkExamdto)
+        {
+            var exam = _context.Exam.Find(ExamId);
+            var Class = _context.Classes.Include(cls=>cls.Standard).Include(cls=>cls.Section).Where(cls=>cls.Id==exam.ClassId).SingleOrDefault(); 
+            var subject = _context.Subject.Find(exam.SubjectId);
+            checkExamdto.ClassName = Class.Standard.ClassNumber.ToString()+Class.Section.Name;
+            checkExamdto.ExamId = exam.Id;
+            checkExamdto.ExamName = exam.Name;
+            checkExamdto.ExamDate = exam.ExamDate;
+            checkExamdto.StudentMarks = new List<Tuple<string, string,int>>();
+            int n = exam.studentMarks.Count();
+            if (exam.isCompleted)
+            {
+                checkExamdto.status = "Completed";
+            }
+            else
+            {
+                checkExamdto.status = "Not Completed";
+            }
+                for (int i = 0; i < n; i++)
+                {
+                    var student = _context.Students.Find(exam.students[i]);
+                    var marks = "Not Given Yet";
+                    if (exam.isCompleted)
+                    {
+                        marks = exam.studentMarks[i].ToString();
+                    }
+                    checkExamdto.StudentMarks.Add(new Tuple<string, string,int>(student.FirstName + ", " + student.LastName, marks,student.Id));
+                }
+        }
+
+        public void AddStudentScore(CheckExamDTO checkExamdto)
+        {
+            
+            var exam = _context.Exam.Find(checkExamdto.ExamId);
+            for(int i = 0; i < exam.students.Count; i++)
+            {
+                if (exam.students[i] == checkExamdto.StudentId)
+                {
+                    exam.studentMarks[i] = checkExamdto.Score;
+                    break;
+                }
+            }
+            _context.Exam.Update(exam);
+            _context.SaveChangesAsync().Wait();
         }
     }
 }

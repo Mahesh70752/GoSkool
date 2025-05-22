@@ -3,3 +3,51 @@
 }
 
 @model GoSkool.DTO.CheckExamDTO;
+
+<div class="container">
+    <div class="mb-4">
+        <div class="row justify-content-start gap-1"><h1>Exam Details</h1></div>
+        <div class="row justify-content-start gap-1"><p>Exam Name: @Model.ExamName</p></div>
+        <div class="row justify-content-start gap-1"><p>Class: @Model.ClassName</p></div>
+        <div class="row justify-content-start gap-1"><p>Exam Date and Time: @Model.ExamDate.ToString()</p></div>
+        <div class="row justify-content-start gap-1"><p>Completed Status: @Model.status</p></div>
+
+
+
+    </div>
+    <div>
+        <h2>Student Marks</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var student in Model.StudentMarks)
+                {
+                    <tr>
+                        <td>@student.Item1</td>
+                        @if(student.Item2 == "0")
+                        {
+                            <td>
+                                <form asp-action="AddScore" method="post">
+                                    <input asp-for="@Model.Score" type="number" placeholder="1" />
+                                    <input hidden asp-for="@Model.ExamId" type="number" placeholder="@Model.ExamId" />
+                                    <input hidden asp-for="@Model.StudentId" type="number" value="@student.Item3" />
+                                    <button type="submit" class="btn btn-sm btn-primary">Add Score</button>
+                                </form>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@student.Item2</td>
+                        }
+                        
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

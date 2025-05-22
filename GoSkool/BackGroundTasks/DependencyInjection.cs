@@ -6,10 +6,7 @@ namespace GoSkool.BackGroundTasks
     {
         public static void AddGoSkool(this IServiceCollection services)
         {
-            services.AddQuartz(options =>
-            {
-                options.UseMicrosoftDependencyInjectionJobFactory();
-            });
+            services.AddQuartz();
 
             services.AddQuartzHostedService(options =>
             {
@@ -17,6 +14,7 @@ namespace GoSkool.BackGroundTasks
             });
 
             //services.ConfigureOptions<TimeTableCreationJobSetup>();
+            services.ConfigureOptions<CheckExamJobSetup>();
 
         }
     }

@@ -5,6 +5,6 @@ namespace GoSkool.Services
     public interface IExamService
     {
         void GetExamModelObj(int subjectId, ExamModel examModelObj);
-        bool CreateExam(ExamModel examModelObj);
+        Task<bool> CreateExam(ExamModel examModelObj);
     }
 }

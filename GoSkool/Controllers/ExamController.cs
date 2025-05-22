@@ -36,12 +36,9 @@ namespace GoSkool.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ExamModel examModelObj)
         {
-            if(_examService.CreateExam(examModelObj))
+            if(await _examService.CreateExam(examModelObj)) return RedirectToAction("Index","Home");
             return View(examModelObj);
-
-            return RedirectToAction("Index","Home");
         }
-
        
     }
 }
