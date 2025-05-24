@@ -19,5 +19,7 @@ namespace GoSkool.Data
         public DbSet<ExamEntity> Exam { get; set; } = default!;
         public DbSet<ClassScheduleEntity> classSchedule { get; set; }
         public DbSet<TeacherScheduleEntity> TeacherSchedule { get; set; }
+        public DbSet<DriverEntity> Driver { get; set; }
+        public DbSet<LocationEntity> Location { get; set; }
     }
 }

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
@@ -138,6 +139,9 @@ namespace GoSkool.Areas.Identity.Pages.Account
 
             public string? StudentClass { get; set; }
             public string Address { get; set; }
+
+            public int Salary {  get; set; }
+            public int BusNumber { get; set; }
         }
 
 
@@ -203,6 +207,13 @@ namespace GoSkool.Areas.Identity.Pages.Account
                         _context.Students.Add(studentEntry);
                         await _context.SaveChangesAsync();
                         user.UserId = studentEntry.Id;
+                    }
+                    else if (Input.Role == "Driver")
+                    {
+                        var driverEntry = new DriverEntity() { FirstName = Input.FirstName, LastName = Input.LastName, Salary = Input.Salary, BusNumber = Input.BusNumber };
+                        _context.Driver.Add(driverEntry);
+                        await _context.SaveChangesAsync();
+                        user.UserId = driverEntry.Id;
                     }
                     await _userManager.UpdateAsync(user);
 

@@ -44,6 +44,12 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Schedule">Schedule</a>
                             </li>
+
+                        }else if (User.IsInRole("Driver"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Driver" asp-action="RouteMap">Travel Route</a>
+                            </li>
                             
                         }
 
