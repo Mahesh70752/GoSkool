@@ -10,6 +10,6 @@ namespace GoSkool.Models
         [ValidateNever]
         public ICollection<SubjectEntity> Subjects { get; set; }
         public ICollection<TeacherEntity> Teachers { get; set; }
-        public List<TeacherScheduleEntity> TeacherSchedules { get; set; }
+        public List<TeacherScheduleClassEntity> TeacherScheduleClasses { get; set; }
     }
 }

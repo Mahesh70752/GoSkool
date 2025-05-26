@@ -8,9 +8,15 @@
 <div class="container">
     <h3>Bus location</h3>
     <div class="row justify-content-center">
+        @if (Model.driving)
+        {
+            <a asp-action="RouteMap" asp-route-driving="@false" class="btn btn-danger col-3">Stop</a>
+        }
+        else
+        {
+            <a asp-action="RouteMap" asp-route-driving="@true" class="btn btn-primary col-3">Start</a>
+        }
 
-        <a asp-action="StartBus" class="btn btn-primary col-3">Start</a>
-        <a class="btn btn-danger col-3">Stop</a>
     </div>
 </div>
 <div id="map" class="w-100"></div>
@@ -52,11 +58,16 @@
 
     @if (Model.driving)
     {
+        Console.WriteLine("Started Driving the bus");
         <text>
             window.setInterval(postLocation,5000);
         </text>
     }
-    
+    else
+    {
+        Console.WriteLine("Stopped the bus");
+    }
+
 
         const locationButton = document.createElement("button");
 

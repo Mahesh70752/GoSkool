@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoSkool.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250522064618_addedStudentsToExams")]
-    partial class addedStudentsToExams
+    [Migration("20250526071729_AddedAttendanceToClasses")]
+    partial class AddedAttendanceToClasses
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -55,34 +55,31 @@ namespace GoSkool.Migrations
                     b.ToTable("ClassEntityTeacherEntity");
                 });
 
-            modelBuilder.Entity("ClassEntityTeacherScheduleEntity", b =>
+            modelBuilder.Entity("GoSkool.Models.AccountantEntity", b =>
                 {
-                    b.Property<int>("ClassId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("TeacherSchedulesId")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Salary")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("ClassId", "TeacherSchedulesId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("TeacherSchedulesId");
-
-                    b.ToTable("ClassEntityTeacherScheduleEntity");
-                });
-
-            modelBuilder.Entity("ClassScheduleEntityTeacherEntity", b =>
-                {
-                    b.Property<int>("periodsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("schedulesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("periodsId", "schedulesId");
-
-                    b.HasIndex("schedulesId");
-
-                    b.ToTable("ClassScheduleEntityTeacherEntity");
+                    b.ToTable("Accountant");
                 });
 
             modelBuilder.Entity("GoSkool.Models.AdminEntity", b =>
@@ -135,6 +132,38 @@ namespace GoSkool.Migrations
                     b.ToTable("Assignment");
                 });
 
+            modelBuilder.Entity("GoSkool.Models.AttendanceEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClassId")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PeriodNumber")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Present")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("Attendance");
+                });
+
             modelBuilder.Entity("GoSkool.Models.ClassEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -158,7 +187,7 @@ namespace GoSkool.Migrations
                     b.ToTable("Classes");
                 });
 
-            modelBuilder.Entity("GoSkool.Models.ClassScheduleEntity", b =>
+            modelBuilder.Entity("GoSkool.Models.DriverEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -166,14 +195,23 @@ namespace GoSkool.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClassId")
+                    b.Property<int>("BusNumber")
                         .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Salary")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassId");
-
-                    b.ToTable("classSchedule");
+                    b.ToTable("Driver");
                 });
 
             modelBuilder.Entity("GoSkool.Models.ExamEntity", b =>
@@ -216,6 +254,30 @@ namespace GoSkool.Migrations
                     b.HasIndex("StudentEntityId");
 
                     b.ToTable("Exam");
+                });
+
+            modelBuilder.Entity("GoSkool.Models.LocationEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BusNumber")
+                        .HasColumnType("int");
+
+                    b.PrimitiveCollection<string>("lats")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.PrimitiveCollection<string>("lngs")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Location");
                 });
 
             modelBuilder.Entity("GoSkool.Models.SectionEntity", b =>
@@ -359,6 +421,29 @@ namespace GoSkool.Migrations
                     b.ToTable("TeacherPeriodEntity");
                 });
 
+            modelBuilder.Entity("GoSkool.Models.TeacherScheduleClassEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClassId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherScheduleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClassId");
+
+                    b.HasIndex("TeacherScheduleId");
+
+                    b.ToTable("TeacherScheduleClasses");
+                });
+
             modelBuilder.Entity("GoSkool.Models.TeacherScheduleEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -374,7 +459,7 @@ namespace GoSkool.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("TeacherSchedule");
+                    b.ToTable("TeachersSchedule");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -639,36 +724,6 @@ namespace GoSkool.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ClassEntityTeacherScheduleEntity", b =>
-                {
-                    b.HasOne("GoSkool.Models.ClassEntity", null)
-                        .WithMany()
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GoSkool.Models.TeacherScheduleEntity", null)
-                        .WithMany()
-                        .HasForeignKey("TeacherSchedulesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ClassScheduleEntityTeacherEntity", b =>
-                {
-                    b.HasOne("GoSkool.Models.TeacherEntity", null)
-                        .WithMany()
-                        .HasForeignKey("periodsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GoSkool.Models.ClassScheduleEntity", null)
-                        .WithMany()
-                        .HasForeignKey("schedulesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("GoSkool.Models.AssignmentEntity", b =>
                 {
                     b.HasOne("GoSkool.Models.ClassEntity", "Class")
@@ -678,6 +733,25 @@ namespace GoSkool.Migrations
                         .IsRequired();
 
                     b.Navigation("Class");
+                });
+
+            modelBuilder.Entity("GoSkool.Models.AttendanceEntity", b =>
+                {
+                    b.HasOne("GoSkool.Models.ClassEntity", "Class")
+                        .WithMany()
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GoSkool.Models.StudentEntity", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Class");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("GoSkool.Models.ClassEntity", b =>
@@ -697,17 +771,6 @@ namespace GoSkool.Migrations
                     b.Navigation("Section");
 
                     b.Navigation("Standard");
-                });
-
-            modelBuilder.Entity("GoSkool.Models.ClassScheduleEntity", b =>
-                {
-                    b.HasOne("GoSkool.Models.ClassEntity", "Class")
-                        .WithMany()
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Class");
                 });
 
             modelBuilder.Entity("GoSkool.Models.ExamEntity", b =>
@@ -754,6 +817,25 @@ namespace GoSkool.Migrations
                         .HasForeignKey("TeacherEntityId");
 
                     b.Navigation("Class");
+                });
+
+            modelBuilder.Entity("GoSkool.Models.TeacherScheduleClassEntity", b =>
+                {
+                    b.HasOne("GoSkool.Models.ClassEntity", "Class")
+                        .WithMany("TeacherScheduleClasses")
+                        .HasForeignKey("ClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GoSkool.Models.TeacherScheduleEntity", "TeacherSchedule")
+                        .WithMany("TeacherScheduleClasses")
+                        .HasForeignKey("TeacherScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Class");
+
+                    b.Navigation("TeacherSchedule");
                 });
 
             modelBuilder.Entity("GoSkool.Models.TeacherScheduleEntity", b =>
@@ -821,6 +903,8 @@ namespace GoSkool.Migrations
             modelBuilder.Entity("GoSkool.Models.ClassEntity", b =>
                 {
                     b.Navigation("Subjects");
+
+                    b.Navigation("TeacherScheduleClasses");
                 });
 
             modelBuilder.Entity("GoSkool.Models.StudentEntity", b =>
@@ -831,6 +915,11 @@ namespace GoSkool.Migrations
             modelBuilder.Entity("GoSkool.Models.TeacherEntity", b =>
                 {
                     b.Navigation("Periods");
+                });
+
+            modelBuilder.Entity("GoSkool.Models.TeacherScheduleEntity", b =>
+                {
+                    b.Navigation("TeacherScheduleClasses");
                 });
 #pragma warning restore 612, 618
         }

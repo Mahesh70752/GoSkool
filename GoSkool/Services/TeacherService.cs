@@ -1,7 +1,6 @@
 ﻿using GoSkool.Data;
 using GoSkool.DTO;
 using GoSkool.Models;
-using GoSkool.Views.Teacher;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -53,9 +52,10 @@ namespace GoSkool.Services
             return teacherId;
         }
 
-        public void GetScheduleData(int teacherId, ScheduleModel teacherScheduleObj)
+        public void GetScheduleData(int teacherId, TeacherScheduleDTO teacherScheduleDTO)
         {
-            teacherScheduleObj.Schedule = _context.TeacherSchedule.Include(x => x.Teacher).Where(x => x.Teacher.Id == teacherId).Include(x => x.Class).ThenInclude(x => x.Standard).Include(x => x.Class).ThenInclude(x => x.Section).SingleOrDefault();
+            teacherScheduleDTO.Teacher = _context.Teachers.Find(teacherId);
+            teacherScheduleDTO.TeacherSchedule = _context.TeachersSchedule.Include(x => x.Teacher).Include(x => x.TeacherScheduleClasses).ThenInclude(x => x.Class).ThenInclude(x=>x.Standard).Include(x=>x.TeacherScheduleClasses).ThenInclude(x=>x.Class).ThenInclude(x=>x.Section).Where(x => x.Teacher.Id == teacherId).SingleOrDefault();
         }
 
         public void GetTeacherAssignments(int teacherId, TeacherHomeModel TeacherHomeObj)
@@ -115,6 +115,79 @@ namespace GoSkool.Services
             }
             _context.Exam.Update(exam);
             _context.SaveChangesAsync().Wait();
+        }
+
+        public void FillClassDetails(TeacherClassDTO classDTO,int teacherId, int ClassId)
+        {
+            classDTO.teacher = _context.Teachers.Find(teacherId);
+            var exams = _context.Exam.Where(ex=>(ex.ClassId == ClassId)).ToList();
+            classDTO.Exams = new List<ExamEntity>();
+            foreach(var exam in exams)
+            {
+                var subject = _context.Subject.Find(exam.SubjectId);
+                if(subject.Name.Contains(classDTO.teacher.Subject)) classDTO.Exams.Add(exam);
+            }
+            classDTO.Assignments = _context.Assignment.Include(asg=>asg.Class).Where(asg=>asg.Class.Id== ClassId).ToList();
+        }
+
+        public void FillAttendanceRecords(int teacherId, TakeAttendanceDTO takeAttendanceDTO)
+        {
+
+
+            int PeriodNumber = 3;
+            //TimeOnly t = new TimeOnly(9, 0);
+            //var curTime = TimeOnly.FromDateTime(DateTime.Now);
+            //while (true)
+            //{
+            //    PeriodNumber++;
+            //    if (PeriodNumber == 3 || PeriodNumber == 7) t = t.AddMinutes(10);
+            //    if (PeriodNumber == 5) t = t.AddMinutes(40);
+            //    var et = t.AddMinutes(60);
+            //    if (curTime < et && curTime >= t)
+            //    {
+            //        break;
+            //    }
+            //    if (PeriodNumber == 9)
+            //    {
+            //        takeAttendanceDTO.Break = true;
+            //        return;
+            //    }
+            //    t = et;
+            //}
+            int ClassId = _context.TeachersSchedule.Where(x => x.Teacher.Id == teacherId).Include(x => x.Teacher).Include(x => x.TeacherScheduleClasses).ThenInclude(x=>x.Class).SingleOrDefault().TeacherScheduleClasses[PeriodNumber - 1].Class.Id;
+            if (ClassId == 82)
+            {
+                takeAttendanceDTO.Break = true;
+                return;
+            }
+            takeAttendanceDTO.Class = _context.Classes.Include(x => x.Standard).Include(x => x.Section).Where(x => x.Id == ClassId).SingleOrDefault();
+            takeAttendanceDTO.PeriodNumber = PeriodNumber;
+            var AttList = _context.Attendance.Include(x=>x.Class).Include(x=>x.Student).Where(x=>(x.Class.Id==ClassId&&x.PeriodNumber==PeriodNumber&&x.Date==DateOnly.FromDateTime(DateTime.Now))).ToList();
+            if (AttList != null&&AttList.Count!=0)
+            {
+                takeAttendanceDTO.AttendanceRecords = AttList;
+                takeAttendanceDTO.AttendanceTaken = true;
+                return;
+            }
+            
+            takeAttendanceDTO.AttendanceRecords = new List<AttendanceEntity>();
+            var ClassStudents = _context.Students.Include(x=>x.Class).Where(x=>x.Class.Id== ClassId).ToList();
+            foreach(var student in ClassStudents)
+            {
+                takeAttendanceDTO.AttendanceRecords.Add(new AttendanceEntity() { PeriodNumber=PeriodNumber,Class=takeAttendanceDTO.Class, Date =  DateOnly.FromDateTime(DateTime.Now) , Student = student});
+            }
+        }
+
+        public void SubmitAttendance(TakeAttendanceDTO takeAttendanceDTO)
+        {
+            var Class = _context.Classes.Find(takeAttendanceDTO.ClassId);
+            for(int i=0;i<takeAttendanceDTO.Students.Count;i++)
+            {
+                var curStudent = _context.Students.Find(takeAttendanceDTO.Students[i]);
+                var curStudentAttendanceRecord = new AttendanceEntity() { Class = Class, Student = curStudent, Date = DateOnly.FromDateTime(DateTime.Now), Present = takeAttendanceDTO.AttendanceRecords[i].Present,PeriodNumber=takeAttendanceDTO.PeriodNumber };
+                _context.Attendance.Add(curStudentAttendanceRecord);
+            }
+            _context.SaveChanges();
         }
     }
 }

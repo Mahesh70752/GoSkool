@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using GoSkool.Data;
 using GoSkool.Models;
 using Microsoft.AspNetCore.Authorization;
-using GoSkool.Views.Teacher;
 using Microsoft.AspNetCore.Identity;
 using GoSkool.Services;
 using GoSkool.DTO;
@@ -41,9 +40,10 @@ namespace GoSkool.Controllers
         public async Task<IActionResult> Schedule()
         {
             var teacherId = _teacherService.GetCurrentTeacherId(await _userManager.GetUserAsync(HttpContext.User));
-            ScheduleModel teacherScheduleObj = new ScheduleModel();
-            _teacherService.GetScheduleData(teacherId, teacherScheduleObj);
-            return View(teacherScheduleObj);
+            TeacherScheduleDTO teacherScheduleDTO = new TeacherScheduleDTO();
+            _teacherService.GetScheduleData(teacherId, teacherScheduleDTO);
+            
+            return View(teacherScheduleDTO);
         }
 
         public async Task<IActionResult> Assignments()
@@ -67,7 +67,26 @@ namespace GoSkool.Controllers
             return RedirectToAction("CheckExam", new { ExamId = checkExamdto.ExamId });
         }
 
-        
+        public IActionResult Class(int teacherId, int ClassId)
+        {
+            TeacherClassDTO classdto = new TeacherClassDTO();
+            _teacherService.FillClassDetails(classdto, teacherId,  ClassId);
+            return View(classdto);
+        }
+
+        public async Task<IActionResult> TakeAttendance()
+        {
+            TakeAttendanceDTO takeAttendanceDTO = new TakeAttendanceDTO();
+            var teacherId = _teacherService.GetCurrentTeacherId(await _userManager.GetUserAsync(HttpContext.User));
+            _teacherService.FillAttendanceRecords(teacherId,takeAttendanceDTO);
+            return View(takeAttendanceDTO);
+        }
+
+        public IActionResult SubmitAttendance(TakeAttendanceDTO takeAttendanceDTO)
+        {
+            _teacherService.SubmitAttendance(takeAttendanceDTO);
+            return RedirectToAction("Index","Home");
+        }
 
     }
 }

@@ -1,0 +1,89 @@
+﻿@{
+    ViewData["Title"] = "Take Attendance";
+}
+
+@using GoSkool.DTO;
+@model TakeAttendanceDTO;
+
+<div class="container">
+    @if (Model.Break)
+    {
+        <h1>You cannot take Attendance on Break Time</h1>
+    }
+    else if (Model.AttendanceTaken)
+    {
+        <div class="mb-5">
+            <h1>Class: @Model.Class.Standard.ClassNumber@Model.Class.Section.Name</h1>
+            <h1>Period Number: @Model.PeriodNumber</h1>
+        </div>
+        <div class="text-center">
+            <h2>Attendance</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>SN</th>
+                        <th>Student Name</th>
+                        <th>Present/Absent</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < Model.AttendanceRecords.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td>@Model.AttendanceRecords[i].Student.FirstName @Model.AttendanceRecords[i].Student.LastName</td>
+                            @if (Model.AttendanceRecords[i].Present)
+                            {
+                                <td>Present</td>
+                            }
+                            else
+                            {
+                                <td>Absent</td>
+                            }
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+        
+    }
+    else
+    {
+        <div class="mb-5">
+            <h1>Class: @Model.Class.Standard.ClassNumber@Model.Class.Section.Name</h1>
+            <h1>Period Number: @Model.PeriodNumber</h1>
+        </div>
+        <div>
+            <form asp-action="SubmitAttendance">
+                <input asp-for="@Model.ClassId" hidden value="@Model.Class.Id" />
+                <input asp-for="@Model.PeriodNumber" hidden value="@Model.PeriodNumber" />
+                <h2>Attendance</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>SN</th>
+                            <th>Student Name</th>
+                            <th>Present/Absent</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < Model.AttendanceRecords.Count; i++)
+                        {
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@Model.AttendanceRecords[i].Student.FirstName @Model.AttendanceRecords[i].Student.LastName</td>
+                                <td><input asp-for="@Model.AttendanceRecords[i].Present" type="checkbox" /><label>Present</label></td>
+                                <Input asp-for="@Model.Students[i]" hidden value="@Model.AttendanceRecords[i].Student.Id" />
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+        </div>
+    }
+</div>

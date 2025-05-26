@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Class";
+}
+
+@model GoSkool.DTO.TeacherClassDTO;
+
+<div class="container-fluid">
+    <div class="container mb-5">
+        <h2>Exams</h2>
+        <div class="row gy-3 mt-2">
+            @{
+                foreach (var exam in Model.Exams)
+                {
+                    <div class="col-lg-4">
+                        <div class="card shadow-lg">
+                            <div class="card-body">
+                                <h5 class="card-title">@exam.Name</h5>
+                                <p class="card-text">Exam On: @exam.ExamDate.ToString()</p>
+                                <a asp-action="CheckExam" asp-route-ExamId="@exam.Id" class="btn btn-primary">View</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="container mb-5">
+        <h1>Assignments</h1>
+        <div class="row gy-3 mt-2">
+            @foreach (var assignment in Model.Assignments)
+            {
+                <div class="col-lg-4">
+                    <div class="card">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibiClKGLPDrr04OrF7ctl4qh0F4X5Y4WnsLpO1ZlTDndhmMKsAPAy_vwPzvbxrHeiNIG5auVISzdb-cyYMKSzTlYkqzXHTxnDoe3ZYfcf_v_LPUAtcKHqC1imQGEQtp_m9M3q7-pDHZtM/s1600/HINDI.png" class="card-img-top" />
+                        <div class="card-body">
+                            <h5 class="card-title">@assignment.Title</h5>
+                            <p class="card-text">Description: @assignment.Description</p>
+                            <a asp-route-asId="@assignment.Id" asp-action="TeacherAssignment" asp-controller="Assignment" class="btn btn-primary">View</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            
+        </div>
+    </div>
+    <div class="container">
+        <h1>Attendance</h1>
+    </div>
+</div>

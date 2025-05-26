@@ -24,6 +24,9 @@ namespace GoSkool.Controllers
             }else if (User.IsInRole("Student"))
             {
                 return RedirectToAction("Index", "Student");
+            }else if (User.IsInRole("Accountant"))
+            {
+                return RedirectToAction("Index", "Accountant");
             }
                 return View();
         }

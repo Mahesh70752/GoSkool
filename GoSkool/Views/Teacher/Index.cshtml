@@ -2,7 +2,7 @@
     ViewData["Title"] = "Home";
 }
 
-@model GoSkool.Views.Teacher.TeacherHomeModel;
+@model GoSkool.DTO.TeacherHomeModel;
 
 <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
@@ -51,13 +51,13 @@
             <div class="row gy-3">
                 @foreach (var Class in Model.classes)
                 {
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src="https://images.pexels.com/photos/6935981/pexels-photo-6935981.jpeg" class="card-img-top" alt="...">
+                    <div class="col-md-3">
+                        <div class="card shadow">
+                            <img src="https://images.pexels.com/photos/5212340/pexels-photo-5212340.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title">Class: @Class.Standard.ClassNumber@Class.Section.Name</h5>
                                 <p class="card-text">Check out class data, enrolled students and assignments</p>
-                                <a href="#" class="btn btn-primary">Check</a>
+                                <a asp-action="Class" asp-route-teacherId="@Model.teacherId" asp-route-ClassId="@Class.Id" class="btn btn-primary">Check</a>
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
                         foreach (var exam in Model.Exams)
                         {
                             <div class="col-lg-4">
-                                <div class="card">
+                                <div class="card shadow-lg">
                                     <div class="card-body">
                                         <h5 class="card-title">@exam.Name</h5>
                                         <p class="card-text">Exam On: @exam.ExamDate.ToString()</p>

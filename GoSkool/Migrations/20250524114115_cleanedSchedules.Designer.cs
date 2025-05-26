@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoSkool.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250519045226_AddingSchedules")]
-    partial class AddingSchedules
+    [Migration("20250524114115_cleanedSchedules")]
+    partial class cleanedSchedules
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,21 +119,16 @@ namespace GoSkool.Migrations
                     b.Property<int>("StandardId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TeacherScheduleEntityId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SectionId");
 
                     b.HasIndex("StandardId");
 
-                    b.HasIndex("TeacherScheduleEntityId");
-
                     b.ToTable("Classes");
                 });
 
-            modelBuilder.Entity("GoSkool.Models.ClassScheduleEntity", b =>
+            modelBuilder.Entity("GoSkool.Models.DriverEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -141,14 +136,23 @@ namespace GoSkool.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClassId")
+                    b.Property<int>("BusNumber")
                         .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Salary")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClassId");
-
-                    b.ToTable("classSchedule");
+                    b.ToTable("Driver");
                 });
 
             modelBuilder.Entity("GoSkool.Models.ExamEntity", b =>
@@ -182,11 +186,39 @@ namespace GoSkool.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.PrimitiveCollection<string>("students")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("StudentEntityId");
 
                     b.ToTable("Exam");
+                });
+
+            modelBuilder.Entity("GoSkool.Models.LocationEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BusNumber")
+                        .HasColumnType("int");
+
+                    b.PrimitiveCollection<string>("lats")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.PrimitiveCollection<string>("lngs")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Location");
                 });
 
             modelBuilder.Entity("GoSkool.Models.SectionEntity", b =>
@@ -287,9 +319,6 @@ namespace GoSkool.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("ClassScheduleEntityId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Contact")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -303,8 +332,6 @@ namespace GoSkool.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ClassScheduleEntityId");
 
                     b.ToTable("Teachers");
                 });
@@ -333,24 +360,6 @@ namespace GoSkool.Migrations
                     b.HasIndex("TeacherEntityId");
 
                     b.ToTable("TeacherPeriodEntity");
-                });
-
-            modelBuilder.Entity("GoSkool.Models.TeacherScheduleEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TeacherId");
-
-                    b.ToTable("TeacherSchedule");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -640,24 +649,9 @@ namespace GoSkool.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GoSkool.Models.TeacherScheduleEntity", null)
-                        .WithMany("Class")
-                        .HasForeignKey("TeacherScheduleEntityId");
-
                     b.Navigation("Section");
 
                     b.Navigation("Standard");
-                });
-
-            modelBuilder.Entity("GoSkool.Models.ClassScheduleEntity", b =>
-                {
-                    b.HasOne("GoSkool.Models.ClassEntity", "Class")
-                        .WithMany()
-                        .HasForeignKey("ClassId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Class");
                 });
 
             modelBuilder.Entity("GoSkool.Models.ExamEntity", b =>
@@ -691,13 +685,6 @@ namespace GoSkool.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("GoSkool.Models.TeacherEntity", b =>
-                {
-                    b.HasOne("GoSkool.Models.ClassScheduleEntity", null)
-                        .WithMany("periods")
-                        .HasForeignKey("ClassScheduleEntityId");
-                });
-
             modelBuilder.Entity("GoSkool.Models.TeacherPeriodEntity", b =>
                 {
                     b.HasOne("GoSkool.Models.ClassEntity", "Class")
@@ -711,17 +698,6 @@ namespace GoSkool.Migrations
                         .HasForeignKey("TeacherEntityId");
 
                     b.Navigation("Class");
-                });
-
-            modelBuilder.Entity("GoSkool.Models.TeacherScheduleEntity", b =>
-                {
-                    b.HasOne("GoSkool.Models.TeacherEntity", "Teacher")
-                        .WithMany()
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -780,11 +756,6 @@ namespace GoSkool.Migrations
                     b.Navigation("Subjects");
                 });
 
-            modelBuilder.Entity("GoSkool.Models.ClassScheduleEntity", b =>
-                {
-                    b.Navigation("periods");
-                });
-
             modelBuilder.Entity("GoSkool.Models.StudentEntity", b =>
                 {
                     b.Navigation("Exams");
@@ -793,11 +764,6 @@ namespace GoSkool.Migrations
             modelBuilder.Entity("GoSkool.Models.TeacherEntity", b =>
                 {
                     b.Navigation("Periods");
-                });
-
-            modelBuilder.Entity("GoSkool.Models.TeacherScheduleEntity", b =>
-                {
-                    b.Navigation("Class");
                 });
 #pragma warning restore 612, 618
         }

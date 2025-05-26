@@ -37,8 +37,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Teacher" asp-action="Schedule">Schedule</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Teacher" asp-action="TakeAttendance">Attendance</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Teacher" asp-action="Assignments">Assignments</a>
                             </li>
+
                         }else if (User.IsInRole("Student"))
                         {
                             <li class="nav-item">
@@ -50,6 +54,9 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Driver" asp-action="RouteMap">Travel Route</a>
                             </li>
+
+                        }else if (User.IsInRole("Accountant"))
+                        {
                             
                         }
 

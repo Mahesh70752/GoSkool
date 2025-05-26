@@ -16,11 +16,11 @@ namespace GoSkool.BackGroundTasks
             _context = context;
         }
 
-        public bool FillTimeTable(int i,int j,List<ClassEntity> AllClasses, List<List<int>> ClassScheduleData, Dictionary<int, List<int>> TeacherClassData, Dictionary<int, List<int>> TeacherScheduleData,List<int> ClassSubjectsCount)
+        public bool FillTimeTable(int i, int j, List<ClassEntity> AllClasses, List<List<int>> ClassScheduleData, Dictionary<int, List<int>> TeacherClassData, Dictionary<int, List<int>> TeacherScheduleData, List<int> ClassSubjectsCount)
         {
             if (j == 8)
             {
-                return FillTimeTable(i+1,0,AllClasses,ClassScheduleData,TeacherClassData,TeacherScheduleData, ClassSubjectsCount);
+                return FillTimeTable(i + 1, 0, AllClasses, ClassScheduleData, TeacherClassData, TeacherScheduleData, ClassSubjectsCount);
             }
             if (i == AllClasses.Count)
             {
@@ -28,16 +28,15 @@ namespace GoSkool.BackGroundTasks
             }
             var ClassId = AllClasses[i].Id;
             bool cur = false;
-            if (9-j > ClassSubjectsCount[i])
+            if (9 - j > ClassSubjectsCount[i])
             {
-               cur =  FillTimeTable(i,j+1,AllClasses,ClassScheduleData,TeacherClassData,TeacherScheduleData, ClassSubjectsCount);
+                cur = FillTimeTable(i, j + 1, AllClasses, ClassScheduleData, TeacherClassData, TeacherScheduleData, ClassSubjectsCount);
             }
             if (cur) return true;
             foreach (var subject in AllClasses[i].Subjects)
             {
                 var teacherId = subject.Teacher.Id;
-                Console.WriteLine(teacherId);
-                if (TeacherScheduleData[teacherId][j]==-1 && (!TeacherClassData[teacherId].Contains(ClassId)))
+                if (TeacherScheduleData[teacherId][j] == -1 && (!TeacherClassData[teacherId].Contains(ClassId)))
                 {
                     TeacherClassData[teacherId].Add(ClassId);
                     ClassScheduleData[i][j] = teacherId;
@@ -54,57 +53,69 @@ namespace GoSkool.BackGroundTasks
         }
         public Task Execute(IJobExecutionContext context)
         {
-            _context.classSchedule.ExecuteDelete();
-            _context.TeacherSchedule.ExecuteDelete();
-            var AllClasses = _context.Classes.Include(cls=>cls.Subjects).ThenInclude(sub=>sub.Teacher).Include(cls=>cls.Standard).Include(cls=>cls.Section).ToList();
-            var AllTeachers = _context.Teachers.Include(x=>x.Classes).ToList(); 
+            _context.TeachersSchedule.ExecuteDelete();
+            _context.TeacherScheduleClasses.ExecuteDelete();
+            var AllClasses = _context.Classes.Include(cls => cls.Subjects).ThenInclude(sub => sub.Teacher).Include(cls => cls.Standard).Include(cls => cls.Section).ToList();
+            var AllTeachers = _context.Teachers.Include(x => x.Classes).ToList();
             List<List<int>> ClassScheduleData = new List<List<int>>();
             Dictionary<int, List<int>> TeacherClassData = new Dictionary<int, List<int>>();
             Dictionary<int, List<int>> TeacherScheduleData = new Dictionary<int, List<int>>();
             List<int> ClassSubjectsCount = new List<int>();
-            for(int i = 0; i < AllClasses.Count; i++)
+            for (int i = 0; i < AllClasses.Count; i++)
             {
                 ClassSubjectsCount.Add(AllClasses[i].Subjects.Count);
             }
             foreach (var Class in AllClasses)
             {
-                ClassScheduleData.Add(new List<int>(9) { -1, -1, -1, -1, -1, -1, -1, -1});
+                ClassScheduleData.Add(new List<int>(8) { -1, -1, -1, -1, -1, -1, -1, -1 });
             }
-            foreach(var teacher in AllTeachers)
+            foreach (var teacher in AllTeachers)
             {
                 TeacherClassData.Add(teacher.Id, new List<int>());
-                TeacherScheduleData.Add(teacher.Id , new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1});
+                TeacherScheduleData.Add(teacher.Id, new List<int>() { -1, -1, -1, -1, -1, -1, -1, -1 });
             }
-            if (FillTimeTable(0,0,AllClasses,ClassScheduleData,TeacherClassData,TeacherScheduleData,ClassSubjectsCount)) {
+            if (FillTimeTable(0, 0, AllClasses, ClassScheduleData, TeacherClassData, TeacherScheduleData, ClassSubjectsCount))
+            {
                 int numberOfClasses = AllClasses.Count;
-                for(int i = 0; i < numberOfClasses; i++)
-                {
-                    var ClassSchedule = new ClassScheduleEntity() { Class = AllClasses[i] };
-                    for(int j = 0; j < 8; j++)
-                    {
-                        if (ClassScheduleData[i][j] == -1)
-                        {
-                            ClassSchedule.periods.Add(_context.Teachers.Find(68));
-                            continue;
-                        }
-                        ClassSchedule.periods.Add(_context.Teachers.Find(ClassScheduleData[i][j]));
-                    }
-                    ClassSchedule.Id = 0;
-                    _context.Add(ClassSchedule);
-                }
-                foreach(var teacher in AllTeachers)
+                //for (int i = 0; i < numberOfClasses; i++)
+                //{
+                //    var ClassSchedule = new ClassScheduleEntity() { Class = AllClasses[i] };
+                //    for (int j = 0; j < 8; j++)
+                //    {
+                //        if (ClassScheduleData[i][j] == -1)
+                //        {
+                //            ClassSchedule.periods.Add(_context.Teachers.Find(71));
+                //            continue;
+                //        }
+                //        ClassSchedule.periods.Add(_context.Teachers.Find(ClassScheduleData[i][j]));
+                //    }
+                //    ClassSchedule.Id = 0;
+                //    _context.Add(ClassSchedule);
+                //}
+                foreach (var teacher in AllTeachers)
                 {
                     var teacherSchedule = new TeacherScheduleEntity() { Teacher = teacher };
-                    for(int j = 0; j < 8; j++)
+                    _context.TeachersSchedule.Add(teacherSchedule);
+                    _context.SaveChangesAsync().Wait();
+                    for (int j = 0; j < 8; j++)
                     {
+                        ClassEntity Class = null;
+                        TeacherScheduleClassEntity tsc = null;
                         if (TeacherScheduleData[teacher.Id][j] == -1)
                         {
-                            teacherSchedule.Class.Add(_context.Classes.Find(41));
-                            continue;
+                            Class = _context.Classes.Find(82);
                         }
-                        teacherSchedule.Class.Add(_context.Classes.Find(TeacherScheduleData[teacher.Id][j]));
+                        else
+                        {
+                            Class = _context.Classes.Find(TeacherScheduleData[teacher.Id][j]);
+                        }
+                            
+                        tsc = new TeacherScheduleClassEntity() { Class = Class, TeacherSchedule = teacherSchedule };
+                        _context.TeacherScheduleClasses.Add(tsc);
+                        _context.SaveChangesAsync().Wait();
+                        teacherSchedule.TeacherScheduleClasses.Add(tsc);
                     }
-                    _context.Add(teacherSchedule);
+                    _context.TeachersSchedule.Update(teacherSchedule);
                 }
                 _context.SaveChanges();
                 _logger.LogInformation("Time Table is Created");
@@ -113,7 +124,7 @@ namespace GoSkool.BackGroundTasks
             {
                 _logger.LogInformation("Time table wasn't created");
             }
-                return Task.CompletedTask;
+            return Task.CompletedTask;
         }
     }
 }

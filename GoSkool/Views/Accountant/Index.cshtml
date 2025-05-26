@@ -1,0 +1,29 @@
+﻿@{
+	ViewData["Title"] = "Accountant Home";
+}
+
+@model GoSkool.DTO.AccountantHomeDTO;
+
+<div class="container">
+	<div>
+		<h1>@Model.Name</h1>
+	</div>
+	<div>
+		<h2>Classes</h2>
+		@for (int i= 0;i < 10;i++)
+		{
+			var cls = Model.Classes[i];
+			<div class="row justify-content-between mt-2 mb-2">
+				<div class="col-md-2">
+					Class @(i+1)
+				</div>
+				@foreach(var sec in Model.Classes[i])
+				{
+					<div class="col-md-2">
+						<a asp-route-ClassId="@sec.Item1" asp-action="Class" class="btn btn-primary">@sec.Item2</a>
+					</div>
+				}
+			</div>
+		}
+	</div>
+</div>

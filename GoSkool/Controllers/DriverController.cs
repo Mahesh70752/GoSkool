@@ -36,11 +36,12 @@ namespace GoSkool.Controllers
             return RedirectToAction("RouteMap");
         }
 
-        public async Task<IActionResult> RouteMap()
+        public async Task<IActionResult> RouteMap(bool driving)
         {
             DriverDTO driver = new DriverDTO();
             var user = await _userManager.GetUserAsync(HttpContext.User);
             _driverservice.FillDriverDetails(user, driver);
+            driver.driving = driving;
             return View(driver);          
         }
 

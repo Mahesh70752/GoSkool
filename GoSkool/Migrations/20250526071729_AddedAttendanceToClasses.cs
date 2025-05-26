@@ -5,25 +5,25 @@
 namespace GoSkool.Migrations
 {
     /// <inheritdoc />
-    public partial class addedStudentsToExams : Migration
+    public partial class AddedAttendanceToClasses : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "students",
-                table: "Exam",
-                type: "nvarchar(max)",
+            migrationBuilder.AddColumn<int>(
+                name: "PeriodNumber",
+                table: "Attendance",
+                type: "int",
                 nullable: false,
-                defaultValue: "[]");
+                defaultValue: 0);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "students",
-                table: "Exam");
+                name: "PeriodNumber",
+                table: "Attendance");
         }
     }
 }

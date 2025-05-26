@@ -1,6 +1,7 @@
 ﻿using GoSkool.Models;
+using Mono.TextTemplating;
 
-namespace GoSkool.Views.Teacher
+namespace GoSkool.DTO
 {
     public class TeacherHomeModel
     {
@@ -10,6 +11,26 @@ namespace GoSkool.Views.Teacher
         public List<ExamEntity> Exams { get; set; }
         public int subjectId { get; set; }
 
+       
         public int teacherId { get; set; }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 }

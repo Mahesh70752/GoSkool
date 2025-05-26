@@ -140,7 +140,8 @@ namespace GoSkool.Areas.Identity.Pages.Account
             public string? StudentClass { get; set; }
             public string Address { get; set; }
 
-            public int Salary {  get; set; }
+            public decimal Salary {  get; set; }
+            public decimal Salary2 { get; set; }
             public int BusNumber { get; set; }
         }
 
@@ -186,20 +187,22 @@ namespace GoSkool.Areas.Identity.Pages.Account
                     await _userManager.AddToRoleAsync(user, Input.Role);
 
                     //Creating extra object based on role (Admin,Teacher,Student,Accountant,Driver,Parent)
-                    if(Input.Role == "Teacher")
+                    if (Input.Role == "Teacher")
                     {
-                        var teacherEntry = new TeacherEntity() { Name = Input.FirstName+", "+Input.LastName, Subject = Input.Subject, Contact = Input.PhoneNumber};
+                        var teacherEntry = new TeacherEntity() { Name = Input.FirstName + ", " + Input.LastName, Subject = Input.Subject, Contact = Input.PhoneNumber };
                         _context.Teachers.Add(teacherEntry);
                         await _context.SaveChangesAsync();
                         user.UserId = teacherEntry.Id;
 
-                    }else if(Input.Role == "Admin")
+                    }
+                    else if (Input.Role == "Admin")
                     {
                         var adminEntry = new AdminEntity() { FirstName = Input.FirstName, LastName = Input.LastName, Salary = 60000 };
                         _context.Admin.Add(adminEntry);
                         await _context.SaveChangesAsync();
                         user.UserId = adminEntry.Id;
-                    }else if(Input.Role == "Student")
+                    }
+                    else if (Input.Role == "Student")
                     {
                         var studentEntry = new StudentEntity() { FirstName = Input.FirstName, LastName = Input.LastName, Address = Input.Address };
                         var sClass = _context.Classes.Include(x => x.Standard).Include(y => y.Section).Where(s => (s.Standard.ClassNumber.ToString() + s.Section.Name == Input.StudentClass)).SingleOrDefault();
@@ -215,10 +218,17 @@ namespace GoSkool.Areas.Identity.Pages.Account
                         await _context.SaveChangesAsync();
                         user.UserId = driverEntry.Id;
                     }
+                    else if (Input.Role == "Accountant")
+                    {
+                        var accountantEntry = new AccountantEntity() { FirstName = Input.FirstName, LastName = Input.LastName, Salary = Input.Salary2 };
+                        Console.WriteLine(Input.Salary);
+                        _context.Accountant.Add(accountantEntry);
+                        await _context.SaveChangesAsync();
+                        user.UserId = accountantEntry.Id;
+                    }
+
                     await _userManager.UpdateAsync(user);
-
-
-                        var userId = await _userManager.GetUserIdAsync(user);
+                    var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

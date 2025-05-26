@@ -93,8 +93,6 @@ namespace GoSkool.Controllers
             return View();
         }
 
-         
-
        
     }
 }

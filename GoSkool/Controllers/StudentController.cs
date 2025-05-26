@@ -10,7 +10,6 @@ using GoSkool.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using GoSkool.Views.Student;
-using GoSkool.Views.Teacher;
 using GoSkool.Services;
 
 namespace GoSkool.Controllers

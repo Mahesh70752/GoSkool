@@ -87,6 +87,13 @@
                     <span asp-validation-for="Input.BusNumber" class="text-danger"></span>
                 </div>
             </div>
+            <div id="accountant" class="col-lg-6 mb-3">
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Salary2" type="number" class="form-control" placeholder="Salary" />
+                    <label asp-for="Input.Salary2">Salary</label>
+                    <span asp-validation-for="Input.Salary2" class="text-danger"></span>
+                </div>
+            </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
@@ -101,6 +108,7 @@
     $('#teacher').hide();
     $('#student').hide();
     $("#driver").hide();
+    $("#accountant").hide();
     $('#roles').change(function () {
         var value = $(this).val();
         console.log(value)
@@ -108,19 +116,28 @@
             $("#teacher").show();
             $("#student").hide();
             $("#driver").hide();
+            $("#accountant").hide();
         }else if(value=="Student"){
             $("#teacher").hide();
             $("#student").show();
             $("#driver").hide();
+            $("#accountant").hide();
         }else if(value=="Driver"){
             $("#teacher").hide();
             $("#student").hide();
             $("#driver").show();
+            $("#accountant").hide();
+        }else if(value=="Accountant"){
+            $("#teacher").hide();
+            $("#student").hide();
+            $("#driver").hide();
+            $("#accountant").show();
         }
         else{
             $('#teacher').hide();
             $('#student').hide();
             $("#driver").hide();
+            $("#accountant").hide();
         }
     });
 </script>

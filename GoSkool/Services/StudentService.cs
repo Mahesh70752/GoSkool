@@ -35,7 +35,7 @@ namespace GoSkool.Services
         {
             var studentId = GetCurrentStudentId(user);
             var Student = _context.Students.Include(x => x.Class).Where(x => x.Id == studentId).SingleOrDefault();
-            scheduleObj.schedule = _context.classSchedule.Include(x => x.periods).Include(x => x.Class).Where(x => x.Class.Id == Student.Class.Id).SingleOrDefault();
+            //scheduleObj.schedule = _context.classSchedule.Include(x => x.periods).Include(x => x.Class).Where(x => x.Class.Id == Student.Class.Id).SingleOrDefault();
         }
     }
 }

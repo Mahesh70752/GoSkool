@@ -14,7 +14,7 @@ namespace GoSkool.BackGroundTasks
             });
 
             //services.ConfigureOptions<TimeTableCreationJobSetup>();
-            services.ConfigureOptions<CheckExamJobSetup>();
+            //services.ConfigureOptions<CheckExamJobSetup>();
 
         }
     }

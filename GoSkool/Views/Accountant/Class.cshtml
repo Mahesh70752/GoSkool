@@ -1,0 +1,35 @@
+﻿@{
+	ViewData["Title"] = "Class";
+}
+
+@model GoSkool.DTO.ClassDetailsDTO;
+
+<div class="container">
+	<div>
+		<h1>Class: @Model.Name</h1>
+	</div>
+	<div class="text-center">
+		<h2>Fee Details</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>SN</th>
+					<th><a asp-route-SortParam="@Model.NameSortParam" asp-route-ClassId="@Model.ClassId" class="btn" >Student Name</a></th>
+					<th><a asp-route-SortParam="@Model.FeeSortParam" asp-route-ClassId="@Model.ClassId" class="btn">Pending Fees</a></th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(int i = 0; i < Model.StudentsCount; i++)
+				{
+					<tr>
+						<td>@(i+1)</td>
+						<td>@Model.StudentFeeDetials[i].Item1</td>
+						<div class="text-end">
+							<td>Rs. @Model.StudentFeeDetials[i].Item2</td>
+						</div>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
