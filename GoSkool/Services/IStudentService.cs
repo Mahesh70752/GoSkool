@@ -1,4 +1,5 @@
-﻿using GoSkool.Views.Student;
+﻿using GoSkool.DTO;
+using GoSkool.Views.Student;
 using Microsoft.AspNetCore.Identity;
 
 namespace GoSkool.Services
@@ -9,5 +10,7 @@ namespace GoSkool.Services
         void GetStudentHomePageObj(IdentityUser user, StudentHomePageModel StudentHomePageObj);
 
         void GetClassScheduleObj(IdentityUser user, ClassScheduleModel scheduleObj);
+        void UploadAssignment(IFormFile file);
+        void GetScheduleData(int studentId, ClassScheduleDTO classScheduleDTO);
     }
 }

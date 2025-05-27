@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GoSkool.Data;
+using GoSkool.DTO;
 using GoSkool.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -39,10 +40,17 @@ namespace GoSkool.Controllers
         }
         public async Task<IActionResult> Schedule()
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            ClassScheduleModel scheduleObj = new ClassScheduleModel();
-            _studentService.GetClassScheduleObj(user, scheduleObj);
-            return View(scheduleObj);
+            var studentId = _studentService.GetCurrentStudentId(await _userManager.GetUserAsync(HttpContext.User));
+            ClassScheduleDTO classScheduleDTO = new ClassScheduleDTO();
+            _studentService.GetScheduleData(studentId, classScheduleDTO);
+            return View(classScheduleDTO);
+        }
+
+        public IActionResult UploadAssignment(StudentHomePageModel studentHomePageObj)
+        {
+            Console.WriteLine(studentHomePageObj.file.FileName);
+            _studentService.UploadAssignment(studentHomePageObj.file);
+            return RedirectToAction("Index");
         }
 
         

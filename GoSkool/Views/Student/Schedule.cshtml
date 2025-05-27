@@ -2,30 +2,83 @@
     ViewData["Title"] = "Schedule";
 }
 
-@model GoSkool.Views.Student.ClassScheduleModel;
+@model GoSkool.DTO.ClassScheduleDTO;
 
 <div class="container">
-    <h1>Time Table</h1>
+    <h1>Class: @Model.Class.Standard.ClassNumber.ToString()@Model.Class.Section.Name</h1>
+    <h2>Timetable [School Timings: 9:00 AM - 5:00 PM]</h2>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>Period</th>
-                <th>Class</th>
+                <th>Subject</th>
+                <th>Teacher</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Duration</th>
             </tr>
         </thead>
         <tbody>
-            @* @{
+            @{
                 var i = 0;
-                foreach (var period in Model.schedule.periods)
+                var curTime = new TimeOnly(9, 0);
+                foreach (var period in Model.ClassSchedule.ClassScheduleTeachers)
                 {
                     i++;
-                    var sub = period.Subject;
+                    if (i == 3)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>Morning Break</td>
+                            <td></td>
+                            <td>@curTime.ToShortTimeString()</td>
+                            <td>@curTime.AddMinutes(10).ToShortTimeString()</td>
+                            <td>10 Minutes</td>
+                        </tr>
+                        curTime = curTime.AddMinutes(10);
+                    }
+                    else if (i == 5)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>Lunch Break</td>
+                            <td></td>
+                            <td>@curTime.ToShortTimeString()</td>
+                            <td>@curTime.AddMinutes(40).ToShortTimeString()</td>
+                            <td>40 Minutes</td>
+                        </tr>
+                        curTime = curTime.AddMinutes(40);
+                    }
+                    else if (i == 7)
+                    {
+                        <tr>
+                            <td></td>
+                            <td>Evening Break</td>
+                            <td></td>
+                            <td>@curTime.ToShortTimeString()</td>
+                            <td>@curTime.AddMinutes(10).ToShortTimeString()</td>
+                            <td>10 Minutes</td>
+                        </tr>
+                        curTime = curTime.AddMinutes(10);
+                    }
+                    var sub = period.Teacher.Subject;
+                    var teacherName = period.Teacher.Name;
+                    if (period.Teacher.Id == 71)
+                    {
+                        sub = "Break";
+                        teacherName = "";
+                    }
                     <tr>
                         <td>Period @i</td>
                         <td>@sub</td>
+                        <td>@teacherName</td>
+                        <td>@curTime.ToShortTimeString()</td>
+                        <td>@curTime.AddMinutes(60).ToShortTimeString()</td>
+                        <td>60 Minutes</td>
                     </tr>
+                    curTime = curTime.AddHours(1);
                 }
-            } *@
+            }
         </tbody>
     </table>
 </div>

@@ -134,26 +134,26 @@ namespace GoSkool.Services
         {
 
 
-            int PeriodNumber = 3;
-            //TimeOnly t = new TimeOnly(9, 0);
-            //var curTime = TimeOnly.FromDateTime(DateTime.Now);
-            //while (true)
-            //{
-            //    PeriodNumber++;
-            //    if (PeriodNumber == 3 || PeriodNumber == 7) t = t.AddMinutes(10);
-            //    if (PeriodNumber == 5) t = t.AddMinutes(40);
-            //    var et = t.AddMinutes(60);
-            //    if (curTime < et && curTime >= t)
-            //    {
-            //        break;
-            //    }
-            //    if (PeriodNumber == 9)
-            //    {
-            //        takeAttendanceDTO.Break = true;
-            //        return;
-            //    }
-            //    t = et;
-            //}
+            int PeriodNumber = 0;
+            TimeOnly t = new TimeOnly(9, 0);
+            var curTime = TimeOnly.FromDateTime(DateTime.Now);
+            while (true)
+            {
+                PeriodNumber++;
+                if (PeriodNumber == 3 || PeriodNumber == 7) t = t.AddMinutes(10);
+                if (PeriodNumber == 5) t = t.AddMinutes(40);
+                var et = t.AddMinutes(60);
+                if (curTime < et && curTime >= t)
+                {
+                    break;
+                }
+                if (PeriodNumber == 9)
+                {
+                    takeAttendanceDTO.Break = true;
+                    return;
+                }
+                t = et;
+            }
             int ClassId = _context.TeachersSchedule.Where(x => x.Teacher.Id == teacherId).Include(x => x.Teacher).Include(x => x.TeacherScheduleClasses).ThenInclude(x=>x.Class).SingleOrDefault().TeacherScheduleClasses[PeriodNumber - 1].Class.Id;
             if (ClassId == 82)
             {

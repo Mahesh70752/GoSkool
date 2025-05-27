@@ -38,7 +38,20 @@ namespace GoSkool.Data
                 .HasOne(e => e.Class)
                 .WithMany(e => e.TeacherScheduleClasses)
                 .HasForeignKey(e => e.ClassId);
+            builder.Entity<ClassScheduleTeacherEntity>()
+                .HasOne(e => e.ClassSchedule)
+                .WithMany(e => e.ClassScheduleTeachers)
+                .HasForeignKey(e => e.ClassScheduleId);
+            builder.Entity<ClassScheduleTeacherEntity>()
+                .HasOne(e => e.Teacher)
+                .WithMany(e => e.ClassScheduleTeachers)
+                .HasForeignKey(e => e.TeacherId);
+
         }
+
+        public DbSet<ClassScheduleEntity> ClassSchedule {  get; set; }
+        public DbSet<ClassScheduleTeacherEntity> ClassScheduleTeachers { get; set; }
+
 
 
 

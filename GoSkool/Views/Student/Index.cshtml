@@ -4,13 +4,44 @@
     ViewData["Title"] = "Home";
 }
 
-@model GoSkool.Views.Student.StudentHomePageModel;
+@model GoSkool.DTO.StudentHomePageModel;
 
-<div class="student-home">
-    <div class="container">
+<div class="container-fluid student-home">
+    <div class="ms-5">
         <h1>Welcome @Model.Student.FirstName, @Model.Student.LastName</h1>
         <p>Class: @Model.Student.Class.Standard.ClassNumber@Model.Student.Class.Section.Name</p>
         <p>Address: @Model.Student.Address</p>
+    </div>
+    <div class="container">
+        <h2>Exams</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Exam Name</th>
+                    <th>Subject Name</th>
+                    <th>Exam Date & Time</th>
+                    <th>Status</th>
+                    <th>Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(int i=0;i<Model.Exams.Count;i++)
+                {
+                    var exam = Model.Exams[i];
+                    var SubjectName = Model.Subjects[i];
+                    var status = "Incompleted";
+                    if (DateTime.Now > exam.ExamDate) status = "Completed";
+                    <tr>
+                        <td>@exam.Name</td>
+                        <td>@SubjectName</td>
+                        <td>@exam.ExamDate.ToString()</td>
+                        <td>@status</td>
+                        <td>@Model.Marks[i]</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
         @if (Model.Assignments != null)
         {
             <h2>Assignments</h2>
@@ -29,7 +60,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(var assignment in Model.Assignments)
+                    @foreach (var assignment in Model.Assignments)
                     {
                         <tr>
                             <td>
@@ -44,8 +75,12 @@
                             }
                             else
                             {
-                                <td>Incomplete 
-                                    <a href="#" class="btn btn-primary">Submit Assignment</a>
+                                <td>
+                                    <form enctype="multipart/form-data" method="post" asp-action="UploadAssignment">
+                                        <input asp-for="@Model.file" type="file" />
+                                        <button type="submit"  class="btn btn-primary">Submit Assignment</button>
+                                    </form>
+                                    
                                 </td>
                             }
                         </tr>
@@ -55,4 +90,5 @@
         }
     </div>
 </div>
+
 

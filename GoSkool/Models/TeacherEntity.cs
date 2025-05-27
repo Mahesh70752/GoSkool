@@ -9,5 +9,7 @@
         public ICollection<ClassEntity> Classes { get; set; }
 
         public ICollection<TeacherPeriodEntity> Periods { get; set; }
+
+        public List<ClassScheduleTeacherEntity> ClassScheduleTeachers { get; set; }
     }
 }
