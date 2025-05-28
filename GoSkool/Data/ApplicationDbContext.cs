@@ -27,6 +27,8 @@ namespace GoSkool.Data
         public DbSet<AttendanceEntity> Attendance { get; set; }
         public DbSet<TeacherScheduleClassEntity> TeacherScheduleClasses { get; set; }
 
+        public DbSet<ParentEntity> Parent { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

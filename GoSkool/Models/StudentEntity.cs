@@ -9,5 +9,6 @@
         public string Address { get; set; }
         public IEnumerable<AssignmentEntity>? Assignments { get; set; }
         public List<ExamEntity> Exams { get; set; }
+        public int SchoolFee { get; set; }
     }
 }

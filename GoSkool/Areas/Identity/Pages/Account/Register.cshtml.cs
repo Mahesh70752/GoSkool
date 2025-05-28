@@ -127,6 +127,8 @@ namespace GoSkool.Areas.Identity.Pages.Account
             [ValidateNever]
             public IEnumerable<SelectListItem> ClassList { get; set; }
 
+            public IEnumerable<SelectListItem> StudentList { get; set; }
+
             // Registering for Teacher
 
             [Display(Name ="Subject")]
@@ -136,7 +138,7 @@ namespace GoSkool.Areas.Identity.Pages.Account
             [DataType(DataType.PhoneNumber)]
             [RegularExpression(@"^(\d{10})$", ErrorMessage = "Wrong mobile")]
             public string PhoneNumber { get; set; }
-
+            public string StudentId { get; set; }
             public string? StudentClass { get; set; }
             public string Address { get; set; }
 
@@ -162,7 +164,12 @@ namespace GoSkool.Areas.Identity.Pages.Account
                 {
                     Text = y.Standard.ClassNumber.ToString()+y.Section.Name.ToString(),
                     Value = y.Standard.ClassNumber.ToString() + y.Section.Name.ToString()
-                })
+                }),
+                StudentList = _context.Students.Select(y => new SelectListItem
+                {
+                    Text = y.FirstName + " " + y.LastName,
+                    Value = y.Id.ToString()
+                }),
             };
         }
 
@@ -225,6 +232,13 @@ namespace GoSkool.Areas.Identity.Pages.Account
                         _context.Accountant.Add(accountantEntry);
                         await _context.SaveChangesAsync();
                         user.UserId = accountantEntry.Id;
+                    }
+                    else if (Input.Role == "Parent")
+                    {
+                        var parentEntry = new ParentEntity() { FirstName = Input.FirstName, LastName = Input.LastName, StudentId = Int32.Parse(Input.StudentId) };
+                        _context.Parent.Add(parentEntry);
+                        await _context.SaveChangesAsync();
+                        user.UserId = parentEntry.Id;
                     }
 
                     await _userManager.UpdateAsync(user);

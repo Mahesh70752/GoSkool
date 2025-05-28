@@ -11,9 +11,9 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white fixed-top ">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">GoSkool</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/Content/Images/GoSkool-logo.png"  class="main-logo"/></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,38 +21,38 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="AppRoles" asp-action="Index">Roles</a>
+                                <a class="nav-link" asp-area="" asp-controller="AppRoles" asp-action="Index">Roles</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="TimeTable">Generate Timetable</a>
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="TimeTable">Generate Timetable</a>
                             </li>
                         }else if (User.IsInRole("Teacher"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Teacher" asp-action="Schedule">Schedule</a>
+                                <a class="nav-link" asp-area="" asp-controller="Teacher" asp-action="Schedule">Schedule</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Teacher" asp-action="TakeAttendance">Attendance</a>
+                                <a class="nav-link" asp-area="" asp-controller="Teacher" asp-action="TakeAttendance">Attendance</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Teacher" asp-action="Assignments">Assignments</a>
+                                <a class="nav-link" asp-area="" asp-controller="Teacher" asp-action="Assignments">Assignments</a>
                             </li>
 
                         }else if (User.IsInRole("Student"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Schedule">Schedule</a>
+                                <a class="nav-link" asp-area="" asp-controller="Student" asp-action="Schedule">Schedule</a>
                             </li>
 
                         }else if (User.IsInRole("Driver"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Driver" asp-action="RouteMap">Travel Route</a>
+                                <a class="nav-link" asp-area="" asp-controller="Driver" asp-action="RouteMap">Travel Route</a>
                             </li>
 
                         }else if (User.IsInRole("Accountant"))
@@ -61,15 +61,15 @@
                         }
 
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
                 </div>
                 <partial name="_LoginPartial"/>
         </nav>
     </header>
-    <div class="container-fluid">
-        <main role="main" class="pb-3">
+    <div class="container-fluid h-100">
+        <main role="main" class="h-100">
             @RenderBody()
         </main>
     </div>

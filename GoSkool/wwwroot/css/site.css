@@ -19,7 +19,8 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    padding-top: 150px;
+    margin-bottom: 60px;
 }
 
 html,body{
@@ -37,7 +38,127 @@ html,body{
     background-color: orange;
 }
 
+nav{
+    padding: 30px 100px !important;
+}
+.nav-link {
+    font-size: 1.2rem !important;
+    color: #202020 !important;
+    background-color: rgba(255, 117, 24,0.2) !important;
+    padding: 6px 15px !important;
+    border-radius: 10px !important;
+    margin: 0px 10px !important;
+    font-weight: 600;
+}
 
+    .nav-link:hover {
+        color: #fff !important;
+        background-color: #FF7518 !important;
+    }
+
+.main-logo{
+    width: 80px;
+    height: 80px;
+}
+
+.bg-sec {
+    background: linear-gradient(135deg, #CC5500, #FF8000) !important;
+}
+
+.bg-image {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('https://media.istockphoto.com/id/2122148349/photo/writing-an-exam-at-the-university.jpg?s=1024x1024&w=is&k=20&c=bwAFK0JlurIPmkBpQcMTm6wkUSUMqHsTsS4jFh1cNng=');
+}
+
+.scr{
+    overflow-y: scroll !important;
+}
+
+.mt-200{
+    margin-top: 900px !important;
+}
+
+.bg-sec-form {
+    background-color: #fff;
+    border-radius: 0.5rem;
+    padding: 20px 30px;
+}
+
+.bg-sec-form h1, .bg-sec-form label {
+    color: #014f86;
+}
+
+.col-pr {
+    color: #FF7518;
+}
+
+
+.flex-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-box {
+    position: relative;
+    width: 100%;
+    text-align: start !important;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    margin: 30px 0;
+}
+
+    .input-box label {
+        margin-bottom: 10px;
+        pointer-events: none;
+    }
+
+    .input-box i {
+        position: absolute;
+        right: 10px;
+        top: 85%;
+    }
+
+    .input-box input {
+        border: none;
+        border-radius: 2px;
+        line-height: 1.5;
+        padding: 5px 20px;
+        background-color: #FAF9F6;
+        box-shadow: 1px 1px 10px 1px #202020;
+    }
+        .input-box input:focus, .input-box input:active {
+            outline: 1px solid #FF7518;
+            border: none;
+        }
+
+.sbtn {
+    background-color: #FF7518;
+    color: white;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+}
+
+.sbtn:active{
+    outline-offset: 1px;
+    outline: 1px solid #FF7518 !important;
+}
+
+.form-bt-links a{
+    text-decoration: none;
+    color: black;
+}
+
+    .form-bt-links a:hover, .form-bt-links a:active {
+        color: #FF7518;
+    }
 
 
 
